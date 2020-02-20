@@ -1,6 +1,6 @@
 <template>
   <div>
-    hello world!
+    首页，欢迎使用礼品卡交易系统！
     <br><br>
   </div>
 </template>

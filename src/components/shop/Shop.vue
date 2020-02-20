@@ -5,16 +5,17 @@
       <SideMenu></SideMenu>
     </el-aside>
     <el-main>
-      <!--<goods></goods>-->
+      <goods></goods>
     </el-main>
   </el-container>
 </template>
 
 <script>
 import SideMenu from './SideMenu'
+import goods from './Goods'
 export default {
     name: 'Shop',
-    components: {SideMenu}
+    components: {SideMenu, goods}
 }
 </script>
 
