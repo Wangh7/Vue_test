@@ -11,14 +11,16 @@
     <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
       {{ item.navItem }}
     </el-menu-item>
-    <a href="#nowhere" style="color: #222;float: right;padding: 20px;">更多功能</a>
+    <el-menu-item style="float: right;" v-on:click="logoff">
+      退出登录
+    </el-menu-item>
   </el-menu>
 </template>
 
 <script>
 export default {
     name: 'NavMenu',
-    data (){
+    data () {
       return {
         navList: [
           {name: '/index', navItem: '浏览大厅'},
@@ -27,6 +29,12 @@ export default {
           {name: '/info', navItem: '个人信息'}
 
         ]
+      }
+    },
+    methods: {
+      logoff () {
+        this.$store.commit('logoff')
+        this.$router.replace({path: '/login'})
       }
     }
 }
