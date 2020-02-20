@@ -51,6 +51,7 @@ export default {
           if (successResponse.data.code === 200) {
             _this.$store.commit('login', _this.loginForm) // 触发store中的login方法 把loginform对象传递给store中的user对象
             // var path = this.$route.query.redirect
+            // this.$route.replace({path: path})
             // this.$route.replace({path: path === '/' || path === undefined ? '/index' : path})
             // 获取登录前页面的路径并跳转，如果该路径不存在，则跳转到首页
             this.$router.replace({path: '/index'})

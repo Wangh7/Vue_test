@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
   if (to.name === 'Login') {
     if (store.state.user.username) {
       next({
-        path: 'index',
+        path: 'index'
         // query: {redirect: to.fullPath}
       })
     } else {
