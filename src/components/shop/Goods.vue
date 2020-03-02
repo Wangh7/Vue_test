@@ -1,19 +1,31 @@
 <template>
-  <el-row>
-    <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
-      <el-card :body-style="{ padding: '0px' }">
-        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-             class="image">
-        <div style="padding: 14px;">
-          <span>好吃的汉堡</span>
-          <div class="bottom clearfix">
-            <time class="time">{{ currentDate }}</time>
-            <el-button type="text" class="button">操作按钮</el-button>
+  <div>
+    <el-row>
+      <el-col :span="4" v-for="item in items" :key="item.id">
+        <el-card style="width: 200px;height: 300px" body-style="{ padding: '0px' }" shadow="hover">
+          <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+               class="image">
+          <div style="padding: 14px;">
+            <span>{{item.name}}</span>
+            <br>
+            <span>面额：{{item.old_price}}</span>
+            <br>
+            <span>价格：{{item.new_price}}</span>
+            <div class="bottom clearfix">
+              <el-button type="text" class="button">查看详情</el-button>
+            </div>
           </div>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-pagination
+        :current-page="1"
+        :page-size="3"
+        :total="5">
+      </el-pagination>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -21,7 +33,13 @@ export default {
   name: 'Goods',
   data () {
     return {
-      currentDate: new Date()
+      items: [
+        {
+          name: '京东E卡',
+          old_price: '100',
+          new_price: '80'
+        }
+      ]
     }
   }
 
@@ -29,10 +47,6 @@ export default {
 </script>
 
 <style scoped>
-  .time {
-    font-size: 13px;
-    color: #999;
-  }
 
   .bottom {
     margin-top: 13px;

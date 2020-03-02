@@ -5,7 +5,7 @@
       <SideMenu></SideMenu>
     </el-aside>
     <el-main>
-      <goods></goods>
+      <goods class="goods-area"></goods>
     </el-main>
   </el-container>
 </template>
@@ -20,5 +20,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .goods-area {
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
