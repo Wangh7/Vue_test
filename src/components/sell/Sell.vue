@@ -1,0 +1,23 @@
+<template>
+  <el-container>
+    <el-aside style="width: 200px;margin-top: 20px;">
+      <switch></switch>
+      <SideMenuSell></SideMenuSell>
+    </el-aside>
+    <el-main>
+      <goods class="goods-area"></goods>
+    </el-main>
+  </el-container>
+</template>
+
+<script>
+import SideMenuSell from './SideMenuSell'
+export default {
+  name: 'Sell',
+  components: {SideMenuSell}
+}
+</script>
+
+<style scoped>
+
+</style>

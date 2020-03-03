@@ -4,6 +4,8 @@ import AppIndex from '@/components/home/Appindex'
 import Login from '@/components/login'
 import Home from '@/components/Home'
 import Shop from '@/components/shop/Shop'
+import Buy from '@/components/buy/Buy'
+import Sell from '@/components/sell/Sell'
 
 Vue.use(Router)
 
@@ -33,6 +35,22 @@ export default new Router({
           path: '/shop',
           name: 'Shop',
           component: Shop,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/buy',
+          name: 'Buy',
+          component: Buy,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/sell',
+          name: 'Sell',
+          component: Sell,
           meta: {
             requireAuth: true
           }
