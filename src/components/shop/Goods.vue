@@ -1,16 +1,15 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="4" v-for="item in items" :key="item.id">
-        <el-card style="width: 200px;height: 300px" body-style="{ padding: '0px' }" shadow="hover">
-          <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-               class="image">
+      <el-col :span="6" v-for="item in items" :key="item.id">
+        <el-card style="width: 200px;height: 250px" body-style="{ padding: '0px' }" shadow="hover">
+          <img src="../../assets/jd.png" class="image">
           <div style="padding: 14px;">
-            <span>{{item.name}}</span>
+            <span>{{item.itemName}}</span>
             <br>
-            <span>面额：{{item.old_price}}</span>
+            <span>面额：{{item.oldPrice}}</span>
             <br>
-            <span>价格：{{item.new_price}}</span>
+            <span>价格：{{item.newPrice}}</span>
             <div class="bottom clearfix">
               <el-button type="text" class="button">查看详情</el-button>
             </div>
@@ -33,13 +32,25 @@ export default {
   name: 'Goods',
   data () {
     return {
-      items: [
-        {
-          name: '京东E卡',
-          old_price: '100',
-          new_price: '80'
+      items: [],
+      currentPage: 1,
+      pagessize: 5
+    }
+  },
+  // 钩子函数
+  mounted: function () {
+    this.loadItems()
+  },
+  methods: {
+    // 利用axios发送get请求，接收到成功200代码后，把data数据替换为后端返回的数据
+    // 利用data和template里相应元素双向绑定，实现页面动态渲染
+    loadItems () {
+      var _this = this
+      this.$axios.get('/items').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.items = resp.data
         }
-      ]
+      })
     }
   }
 
