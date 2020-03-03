@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="6" v-for="item in items" :key="item.id">
+      <el-col :span="24" v-for="item in items" :key="item.id">
         <el-card style="width: 200px;height: 250px" body-style="{ padding: '0px' }" shadow="hover">
           <img :src="item.image" class="image" alt="封面">
           <div style="padding: 14px;">

@@ -5,7 +5,7 @@
       <SideMenuBuy></SideMenuBuy>
     </el-aside>
     <el-main>
-      <goods class="goods-area"></goods>
+      <router-view/>
     </el-main>
   </el-container>
 </template>

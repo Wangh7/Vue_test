@@ -6,6 +6,12 @@ import Home from '@/components/Home'
 import Shop from '@/components/shop/Shop'
 import Buy from '@/components/buy/Buy'
 import Sell from '@/components/sell/Sell'
+import IndexSell from '@/components/sell/IndexSell'
+import Selling from '@/components/sell/Selling'
+import Sold from '@/components/sell/Sold'
+import IndexBuy from '@/components/buy/IndexBuy'
+import Bought from '@/components/buy/Bought'
+import Buying from '@/components/buy/Buying'
 
 Vue.use(Router)
 
@@ -32,6 +38,14 @@ export default new Router({
           }
         },
         {
+          path: '/info',
+          name: 'Info',
+          component: Selling,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
           path: '/shop',
           name: 'Shop',
           component: Shop,
@@ -43,17 +57,65 @@ export default new Router({
           path: '/buy',
           name: 'Buy',
           component: Buy,
-          meta: {
-            requireAuth: true
-          }
+          redirect: '/buy/index',
+          children: [
+            {
+              path: '/buy/index',
+              name: 'IndexBuy',
+              component: IndexBuy,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/buy/buying',
+              name: 'Buying',
+              component: Buying,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/buy/bought',
+              name: 'Bought',
+              component: Bought,
+              meta: {
+                requireAuth: true
+              }
+            }
+          ]
         },
         {
           path: '/sell',
           name: 'Sell',
           component: Sell,
-          meta: {
-            requireAuth: true
-          }
+          redirect: '/sell/index',
+          children: [
+            {
+              path: '/sell/index',
+              name: 'IndexSell',
+              component: IndexSell,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/sell/selling',
+              name: 'Selling',
+              component: Selling,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/sell/sold',
+              name: 'Sold',
+              component: Sold,
+              meta: {
+                requireAuth: true
+              }
+            }
+          ]
         }
       ]
     }
