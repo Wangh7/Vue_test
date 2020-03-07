@@ -2,64 +2,45 @@
   <div>
     <el-col style="width: 600px">
       <el-form
-        :model="ruleForm"
+        :model="form"
         :rules="rules"
-        ref="ruleForm"
+        ref="form"
         label-width="150px"
         class="demo-ruleForm"
         style="text-align: left">
+        <!-- prop和v-model的名称需要一致 -->
         <el-form-item label="礼品卡名称" prop="name">
-          <el-input v-model="ruleForm.name" placeholder="请输入名称"></el-input>
+          <el-input v-model="form.name" placeholder="请输入名称"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡种类" prop="region">
-          <el-select v-model="ruleForm.region" placeholder="请选择种类">
+        <el-form-item label="礼品卡种类" prop="type">
+          <el-select v-model="form.type" placeholder="请选择种类">
             <el-option label="京东E卡" value="jd"></el-option>
             <el-option label="苏宁易购" value="su"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="礼品卡面额" prop="oldprice">
-          <el-input v-model="ruleForm.oldprice" placeholder="请输入面额"></el-input>
+        <el-form-item label="礼品卡面额" prop="oldPrice">
+          <el-input v-model="form.oldPrice" placeholder="请输入面额"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡售价" prop="newprice">
-          <el-input v-model="ruleForm.newprice" placeholder="请输入售价"></el-input>
+        <el-form-item label="礼品卡售价" prop="newPrice">
+          <el-input v-model="form.newPrice" placeholder="请输入售价"></el-input>
         </el-form-item>
         <el-form-item label="礼品卡到期时间" required>
           <el-col :span="10">
             <el-form-item prop="date1">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
+              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
                               style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">-</el-col>
           <el-col :span="12">
             <el-form-item prop="date2">
-              <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="即时配送" prop="delivery">
-          <el-switch v-model="ruleForm.delivery"></el-switch>
-        </el-form-item>
-        <el-form-item label="活动性质" prop="type">
-          <el-checkbox-group v-model="ruleForm.type">
-            <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-            <el-checkbox label="地推活动" name="type"></el-checkbox>
-            <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-            <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="特殊资源" prop="resource">
-          <el-radio-group v-model="ruleForm.resource">
-            <el-radio label="线上品牌商赞助"></el-radio>
-            <el-radio label="线下场地免费"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="活动形式" prop="desc">
-          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+          <el-button type="primary" @click="submitForm('form')">立即发布</el-button>
+          <el-button @click="resetForm('form')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -67,64 +48,66 @@
 </template>
 
 <script>
+// 数据验证器
 import {isPriceVlidator} from '../../utils/validator'
 
 export default {
   name: 'Selling',
   data () {
     return {
-      ruleForm: {
+      form: {
         name: '',
-        region: '',
-        oldprice: '',
-        newprice: '',
+        type: '',
+        oldPrice: '',
+        newPrice: '',
         date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        date2: ''
       },
       rules: {
         name: [
           {required: true, message: '请输入礼品卡名称', trigger: 'blur'},
           {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
         ],
-        region: [
+        type: [
           {required: true, message: '请选择礼品卡种类', trigger: 'change'}
         ],
-        oldprice: [
+        oldPrice: [
           {required: true, message: '请输入金额', trigger: 'blur'},
           {validator: isPriceVlidator}
         ],
-        newprice: [
+        newPrice: [
           {required: true, message: '请输入金额', trigger: 'blur'},
           {validator: isPriceVlidator}
         ],
-
         date1: [
           {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
         ],
         date2: [
           {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
-        ],
-        type: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
-        ],
-        resource: [
-          {required: true, message: '请选择活动资源', trigger: 'change'}
-        ],
-        desc: [
-          {required: true, message: '请填写活动形式', trigger: 'blur'}
         ]
       }
     }
   },
   methods: {
     submitForm (formName) {
+      // alert(this.$store.state.user.username)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.$axios
+            .post('/items', {
+              userId: '1',
+              oldPrice: parseFloat(this.form.oldPrice),
+              newPrice: parseFloat(this.form.newPrice),
+              itemName: this.form.name,
+              image: '../../'
+            }).then(resp => {
+            if (resp && resp.status === 200) {
+              alert('提交成功')
+            } else {
+              alert('提交失败')
+              return false
+            }
+          })
         } else {
           console.log('error submit!!')
           return false

@@ -1,8 +1,13 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="24" v-for="item in items" :key="item.id">
-        <el-card style="width: 200px;height: 250px" body-style="{ padding: '0px' }" shadow="hover">
+    <el-col :span="24">
+      <el-row style="height: 1000px">
+        <el-card
+          v-for="item in items"
+          :key="item.id"
+          style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px"
+          body-style="padding: 0px"
+          shadow="hover">
           <img :src="item.image" class="image" alt="封面">
           <div style="padding: 14px;">
             <span>{{item.itemName}}</span>
@@ -15,8 +20,8 @@
             </div>
           </div>
         </el-card>
-      </el-col>
-    </el-row>
+      </el-row>
+    </el-col>
     <el-row>
       <el-pagination
         :current-page="1"
