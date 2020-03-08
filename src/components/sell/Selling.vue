@@ -28,19 +28,21 @@
           <el-col :span="10">
             <el-form-item prop="date1">
               <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
-                              style="width: 100%;"></el-date-picker>
+                              style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">-</el-col>
           <el-col :span="12">
             <el-form-item prop="date2">
-              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
+              <el-time-picker placeholder="选择时间" v-model="form.date2"
+                              style="width: 100%;" value-format="HH:mm:ss"></el-time-picker>
             </el-form-item>
           </el-col>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('form')">立即发布</el-button>
           <el-button @click="resetForm('form')">重置</el-button>
+          <el-button type="warning" @click="test">测试</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -80,17 +82,16 @@ export default {
           {validator: isPriceVlidator}
         ],
         date1: [
-          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
+          {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
         ],
         date2: [
-          {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
+          {type: 'string', required: true, message: '请选择时间', trigger: 'change'}
         ]
       }
     }
   },
   methods: {
     submitForm (formName) {
-      // alert(this.$store.state.user.username)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios
@@ -99,7 +100,8 @@ export default {
               oldPrice: parseFloat(this.form.oldPrice),
               newPrice: parseFloat(this.form.newPrice),
               itemName: this.form.name,
-              image: '../../'
+              image: '../../',
+              dueDate: this.form.date1 + ' ' + this.form.date2
             }).then(resp => {
             if (resp && resp.status === 200) {
               alert('提交成功')
@@ -116,6 +118,9 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    test () {
+      console.log(this.form.date1 + ' ' + this.form.date2)
     }
   }
 }
