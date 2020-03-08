@@ -1,27 +1,25 @@
 <template>
   <div>
-    <el-col :span="24">
-      <el-row style="height: 1000px">
-        <el-card
-          v-for="item in items"
-          :key="item.id"
-          style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px"
-          body-style="padding: 0px"
-          shadow="hover">
-          <img :src="item.image" class="image" alt="封面">
-          <div style="padding: 14px;">
-            <span>{{item.itemName}}</span>
-            <br>
-            <span>面额：{{item.oldPrice}}</span>
-            <br>
-            <span>价格：{{item.newPrice}}</span>
-            <div class="bottom clearfix">
-              <el-button type="text" class="button">查看详情</el-button>
-            </div>
+    <el-row style="height: 1000px">
+      <el-card
+        v-for="item in items"
+        :key="item.id"
+        style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px;float: left"
+        body-style="padding: 0px"
+        shadow="hover">
+        <img :src="item.image" class="image" alt="封面">
+        <div style="padding: 14px;">
+          <span>{{item.itemName}}</span>
+          <br>
+          <span>面额：{{item.oldPrice}}</span>
+          <br>
+          <span>价格：{{item.newPrice}}</span>
+          <div class="bottom clearfix">
+            <el-button type="text" class="button">查看详情</el-button>
           </div>
-        </el-card>
-      </el-row>
-    </el-col>
+        </div>
+      </el-card>
+    </el-row>
     <el-row>
       <el-pagination
         :current-page="1"
