@@ -14,8 +14,9 @@
         </el-form-item>
         <el-form-item label="礼品卡种类" prop="type">
           <el-select v-model="form.type" placeholder="请选择种类">
-            <el-option label="京东E卡" value="jd"></el-option>
-            <el-option label="苏宁易购" value="su"></el-option>
+            <el-option v-for="(item,i) in types" :key="i"
+                       :label="item.typeName"
+                       :value="item.typeId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="礼品卡面额" prop="oldPrice">
@@ -70,14 +71,14 @@ export default {
   name: 'Selling',
   data () {
     return {
+      types: [],
       form: {
         name: '',
         type: '',
         oldPrice: '',
         newPrice: '',
         date1: '',
-        date2: '',
-        typeList: []
+        date2: ''
       },
       rules: {
         name: [
@@ -104,7 +105,19 @@ export default {
       }
     }
   },
+  // 钩子函数
+  mounted: function () {
+    this.loadItemsType()
+  },
   methods: {
+    loadItemsType () {
+      let _this = this
+      this.$axios.get('/items/types').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.types = resp.data
+        }
+      })
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -114,9 +127,9 @@ export default {
               oldPrice: parseFloat(this.form.oldPrice),
               newPrice: parseFloat(this.form.newPrice),
               itemName: this.form.name,
-              image: '../../',
               createDate: cTime(),
-              dueDate: this.form.date1 + ' ' + this.form.date2
+              dueDate: this.form.date1 + ' ' + this.form.date2,
+              itemType: {typeId: this.form.type}
             }).then(resp => {
             if (resp && resp.status === 200) {
               alert('提交成功')
@@ -133,10 +146,6 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
-    },
-    getTypeList () {
-      let _this = this
-      this.$axios.get
     },
     test () {
       let myDate = new Date()
