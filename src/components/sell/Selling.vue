@@ -76,7 +76,8 @@ export default {
         oldPrice: '',
         newPrice: '',
         date1: '',
-        date2: ''
+        date2: '',
+        typeList: []
       },
       rules: {
         name: [
@@ -132,6 +133,10 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    getTypeList () {
+      let _this = this
+      this.$axios.get
     },
     test () {
       let myDate = new Date()

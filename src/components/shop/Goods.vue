@@ -7,7 +7,7 @@
         style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px;float: left"
         body-style="padding: 0px"
         shadow="hover">
-        <img :src="item.image" class="image" alt="封面">
+        <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
         <div style="padding: 14px;">
           <span>{{item.itemName}}</span>
           <br>
