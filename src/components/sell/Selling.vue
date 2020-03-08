@@ -50,9 +50,22 @@
 </template>
 
 <script>
+
 // 数据验证器
 import {isPriceVlidator} from '../../utils/validator'
 
+let cTime = function () {
+  let myDate = new Date()
+  let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
+  let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
+  let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
+  let year = myDate.getFullYear()
+  let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
+  let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
+  let str = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec
+  console.log(str)
+  return str
+}
 export default {
   name: 'Selling',
   data () {
@@ -101,6 +114,7 @@ export default {
               newPrice: parseFloat(this.form.newPrice),
               itemName: this.form.name,
               image: '../../',
+              createDate: cTime(),
               dueDate: this.form.date1 + ' ' + this.form.date2
             }).then(resp => {
             if (resp && resp.status === 200) {
@@ -120,7 +134,14 @@ export default {
       this.$refs[formName].resetFields()
     },
     test () {
-      console.log(this.form.date1 + ' ' + this.form.date2)
+      let myDate = new Date()
+      let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
+      let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
+      let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
+      let year = myDate.getFullYear()
+      let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
+      let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
+      console.log(year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec)
     }
   }
 }
