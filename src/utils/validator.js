@@ -29,3 +29,13 @@ export function isPassword (rule, value, callback) {
     return callback()
   }
 }
+
+// 验证手机
+export function isPhone (rule, value, callback) {
+  const pattern = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
+  if (!pattern.test(value)) {
+    return callback(new Error('电话号码格式不正确'))
+  } else {
+    return callback()
+  }
+}

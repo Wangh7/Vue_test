@@ -9,18 +9,25 @@
     ref="registerForm">
     <h3 class="register_title">用户注册</h3>
     <el-form-item prop="username">
-      <el-input prefix-icon="el-icon-user" type="text" v-model="registerForm.username" auto-complete="off" placeholder="用户名"></el-input>
+      <el-input prefix-icon="el-icon-user" type="text" v-model="registerForm.username" auto-complete="off"
+                placeholder="用户名"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.password" auto-complete="off" placeholder="密码"
+      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.password" auto-complete="off"
+                placeholder="密码"
                 show-password></el-input>
     </el-form-item>
     <el-form-item prop="checkPass">
-      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.checkPass" auto-complete="off" placeholder="确认密码"
+      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.checkPass" auto-complete="off"
+                placeholder="确认密码"
                 show-password></el-input>
     </el-form-item>
+    <el-form-item prop="phone">
+      <el-input prefix-icon="el-icon-phone" type="text" v-model="registerForm.phone" auto-complete="off"
+                placeholder="手机号码"></el-input>
+    </el-form-item>
     <el-form-item>
-      <el-button type="primary" style="width: 30%;border: none" v-on:click="register(registerForm)">注册</el-button>
+      <el-button type="primary" style="width: 30%;border: none" v-on:click="register('registerForm')">注册</el-button>
       <!--<el-button type="info" style="width: 30%;border: none" v-on:click="clear">重置</el-button>-->
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('registerForm')">重置</el-button>
     </el-form-item>
@@ -30,7 +37,7 @@
 
 <script>
 
-import {isPassword, isUsername} from '../utils/validator'
+import {isPassword, isUsername, isPhone} from '../utils/validator'
 
 export default {
   name: 'Register',
@@ -48,7 +55,8 @@ export default {
       checked: true,
       registerForm: {
         username: '',
-        password: ''
+        password: '',
+        phone: ''
       },
       loading: false,
       rules: {
@@ -62,6 +70,10 @@ export default {
         ],
         checkPass: [
           {validator: rePassword}
+        ],
+        phone: [
+          {required: true, message: '请输入电话号码', trigger: 'blur'},
+          {validator: isPhone}
         ]
       }
     }
@@ -75,7 +87,8 @@ export default {
             .post('/register', {
               username: this.registerForm.username,
               password: this.registerForm.password,
-              usertype: 'user'
+              usertype: 'user',
+              phone: this.registerForm.phone
             })
             .then(resp => {
               if (resp.data.code === 200) {
