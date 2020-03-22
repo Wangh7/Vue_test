@@ -12,6 +12,7 @@ import Sold from '@/components/sell/Sold'
 import IndexBuy from '@/components/buy/IndexBuy'
 import Bought from '@/components/buy/Bought'
 import Buying from '@/components/buy/Buying'
+import Register from '@/components/register'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     },
     {
       path: '/home',
