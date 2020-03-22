@@ -41,7 +41,8 @@ export default {
       this.$axios
         .post('/register', {
           username: this.registerForm.username,
-          password: this.registerForm.password
+          password: this.registerForm.password,
+          usertype: 'user'
         })
         .then(resp => {
           if (resp.data.code === 200) {
