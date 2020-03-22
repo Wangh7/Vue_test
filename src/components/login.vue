@@ -17,6 +17,7 @@
       <el-button type="primary" style="width: 30%;border: none" v-on:click="login">登录</el-button>
       <!--<el-button type="info" style="width: 30%;border: none" v-on:click="clear">重置</el-button>-->
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('loginForm')">重置</el-button>
+      <el-button type="warning" stype="width: 30%;border: none" v-on:click="register">注册</el-button>
     </el-form-item>
   </el-form>
   </body>
@@ -69,6 +70,9 @@ export default {
         username: '',
         password: ''
       }
+    },
+    register () {
+      this.$router.replace({path: '/register'})
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
