@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 设置反向代理 前端请求发送到8443/api
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
+axios.defaults.withCredentials = true
 // 全局注册 其他组件可通过this.$axios 发送数据
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -43,7 +44,9 @@ router.beforeEach((to, from, next) => {
   }
   if (to.meta.requireAuth) { /* 要去的路径是否需要登录 */
     if (store.state.user.username) { /* 存储里是否有user信息 */
-      next() /* 放行 */
+      axios.get('/authentication').then(resp => {
+        if (resp) next()
+      })
     } else {
       next({
         path: 'login',
