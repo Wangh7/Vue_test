@@ -37,8 +37,14 @@ export default {
   },
   methods: {
     logoff () {
-      this.$store.commit('logoff')
-      this.$router.replace({path: '/login'})
+      let _this = this
+      _this.$axios.get('/logout').then(resp => {
+        if (resp.data.code === 200) {
+          // 前后端状态保持一致
+          this.$store.commit('logoff')
+          this.$router.replace({path: '/login'})
+        }
+      })
     }
   }
 }

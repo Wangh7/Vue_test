@@ -15,8 +15,8 @@ export default new Vuex.Store({
       window.localStorage.setItem('user', JSON.stringify(user))
     },
     logoff (state) {
-      // state.user = null
-      window.localStorage.clear()
+      state.user = []
+      window.localStorage.removeItem('user')
     }
   }
 })
