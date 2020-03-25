@@ -14,6 +14,9 @@
       <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
     <el-form-item>
+      <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
+    </el-form-item>
+    <el-form-item>
       <el-button type="primary" style="width: 30%;border: none" v-on:click="login">登录</el-button>
       <!--<el-button type="info" style="width: 30%;border: none" v-on:click="clear">重置</el-button>-->
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('loginForm')">重置</el-button>
@@ -38,7 +41,8 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        rememberMe: false
       },
       responseResult: []
     }
@@ -50,7 +54,8 @@ export default {
       this.$axios
         .post('/login', {
           username: this.loginForm.username,
-          password: this.loginForm.password
+          password: this.loginForm.password,
+          remember: this.loginForm.rememberMe
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
