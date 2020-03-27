@@ -2,7 +2,7 @@
   <div>
     <el-row style="height: 1000px">
       <el-card
-        v-for="item in items"
+        v-for="item in items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         :key="item.id"
         style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px;float: left"
         body-style="padding: 0px"
@@ -22,9 +22,10 @@
     </el-row>
     <el-row>
       <el-pagination
-        :current-page="1"
-        :page-size="3"
-        :total="5">
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="items.length">
       </el-pagination>
     </el-row>
   </div>
@@ -37,7 +38,7 @@ export default {
     return {
       items: [],
       currentPage: 1,
-      pagessize: 5
+      pageSize: 8
     }
   },
   // 钩子函数
@@ -54,6 +55,11 @@ export default {
           _this.items = resp.data
         }
       })
+    },
+
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage
+
     }
   }
 
