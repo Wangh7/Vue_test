@@ -59,7 +59,6 @@ export default {
 
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
-
     }
   }
 
