@@ -47,7 +47,7 @@
     </el-pagination>
     <el-button @click="deleteItem()">测试</el-button>
 
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+    <el-dialog title="修改商品信息" :visible.sync="dialogFormVisible">
       <el-form
         :model="form"
         :rules="rules"
@@ -88,13 +88,13 @@
           </el-col>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('form')">立即发布</el-button>
-          <el-button @click="resetForm('form')">重置</el-button>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+        <el-button type="warning" @click="resetForm('form')">重置</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitForm('form')">修改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -207,18 +207,19 @@ export default {
     },
     handleEdit (index, row, scope) {
       this.dialogFormVisible = true
-      this.$refs[`form`].resetFields()
-      this.form = {
-        id: row.itemId,
-        createDate: row.createDate,
-        status: row.status,
-        name: row.itemName,
-        type: row.itemType.typeId,
-        oldPrice: row.oldPrice,
-        newPrice: row.newPrice,
-        date1: row.dueDate,
-        date2: row.dueDate
-      }
+      this.$nextTick(function () {
+        this.form = {
+          id: row.itemId,
+          createDate: row.createDate,
+          status: row.status,
+          name: row.itemName,
+          type: row.itemType.typeId,
+          oldPrice: row.oldPrice,
+          newPrice: row.newPrice,
+          date1: row.dueDate,
+          date2: row.dueDate
+        }
+      })
     },
     handleDelete (index, row, scope) {
       scope._self.$refs[`popover-${index}`].doClose()
