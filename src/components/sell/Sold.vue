@@ -216,8 +216,8 @@ export default {
           type: row.itemType.typeId,
           oldPrice: row.oldPrice,
           newPrice: row.newPrice,
-          date1: row.dueDate,
-          date2: row.dueDate
+          date1: row.dueDate.split(' ')[0],
+          date2: row.dueDate.split(' ')[1]
         }
       })
     },
