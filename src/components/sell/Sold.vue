@@ -45,7 +45,6 @@
       :page-size="pageSize"
       :total="items.length">
     </el-pagination>
-    <el-button @click="deleteItem()">测试</el-button>
 
     <el-dialog title="修改商品信息" :visible.sync="dialogFormVisible">
       <el-form
@@ -236,18 +235,6 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
-    },
-    deleteItem () {
-      this.$axios.post('/items/delete', {
-        itemId: 14
-      }).then(resp => {
-        if (resp && resp.status === 200) {
-          alert('删除成功')
-        } else {
-          alert('删除失败')
-          return false
-        }
-      })
     }
   }
 }

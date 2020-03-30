@@ -33,30 +33,43 @@ Vue.use(ElementUI)
 
 router.beforeEach((to, from, next) => {
   if (to.name === 'Login') {
-    if (store.state.user.username) {
-      next({
-        path: 'index'
-        // query: {redirect: to.fullPath}
+    if (store.state.user) {
+      axios.get('/authentication').then(resp => {
+        if (resp.data) {
+          next({
+            path: 'index'
+          })
+        } else {
+          next()
+        }
       })
     } else {
       next()
     }
   }
   if (to.meta.requireAuth) { /* 要去的路径是否需要登录 */
-    if (store.state.user.username) { /* 存储里是否有user信息 */
+    if (store.state.user) { /* 存储里是否有user信息 */
       axios.get('/authentication').then(resp => {
-        if (resp) next()
+        if (resp.data) { /* 前后端都正确 */
+          next()
+        } else { /* 前端正确，后端错误 */
+          next({
+            path: 'login',
+            query: {redirect: to.fullPath}
+          })
+        }
       })
-    } else {
+    } else { /* 前后端都错误 */
       next({
         path: 'login',
         query: {redirect: to.fullPath}
-      }) /* 跳转登录页面 */
+      })
     }
   } else {
     next()
   }
 })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
