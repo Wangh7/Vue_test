@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
       axios.get('/authentication').then(resp => {
         if (resp.data) {
           next({
-            path: 'index'
+            path: '/index'
           })
         } else {
           next()
@@ -54,14 +54,14 @@ router.beforeEach((to, from, next) => {
           next()
         } else { /* 前端正确，后端错误 */
           next({
-            path: 'login',
+            path: '/login',
             query: {redirect: to.fullPath}
           })
         }
       })
     } else { /* 前后端都错误 */
       next({
-        path: 'login',
+        path: '/login',
         query: {redirect: to.fullPath}
       })
     }
