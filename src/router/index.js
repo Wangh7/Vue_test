@@ -13,7 +13,9 @@ import IndexBuy from '@/components/buy/IndexBuy'
 import Bought from '@/components/buy/Bought'
 import Buying from '@/components/buy/Buying'
 import Register from '@/components/register'
-
+import SellEdit from '@/components/sell/SellEdit'
+import UserManager from '@/components/admin/UserManager'
+import CheckItem from '@/components/manager/CheckItem'
 Vue.use(Router)
 
 export default new Router({
@@ -31,10 +33,26 @@ export default new Router({
     },
     {
       path: '/home',
-      name: Home,
+      name: 'Home',
       component: Home,
       redirect: '/index', // 仍然通过/index访问首页
       children: [
+        {
+          path: '/check',
+          name: 'CheckItem',
+          component: CheckItem,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/user',
+          name: 'UserManager',
+          component: UserManager,
+          meta: {
+            requireAuth: true
+          }
+        },
         {
           path: '/index',
           name: 'AppIndex',
@@ -46,7 +64,7 @@ export default new Router({
         {
           path: '/info',
           name: 'Info',
-          component: Selling,
+          component: SellEdit,
           meta: {
             requireAuth: true
           }
