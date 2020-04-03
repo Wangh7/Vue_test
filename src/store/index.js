@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     user: {
       username: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username
-    }
+    },
+    menus: []
   },
   mutations: {
     login (state, user) {
@@ -17,6 +18,10 @@ export default new Vuex.Store({
     logoff (state) {
       state.user = []
       window.localStorage.removeItem('user')
+      state.menus = []
+    },
+    initMenu (state, menus) {
+      state.menus = menus
     }
   }
 })

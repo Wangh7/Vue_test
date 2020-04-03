@@ -32,7 +32,11 @@ Vue.use(ElementUI)
 }) */
 
 router.beforeEach((to, from, next) => {
-  if (to.name === 'Login') {
+  if (store.state.user.username) {
+    initNavMenu(router, store)
+  }
+
+  if (to.path.startsWith('/login')) {
     if (store.state.user) {
       axios.get('/authentication').then(resp => {
         if (resp.data) {
@@ -69,6 +73,44 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+/* 初始化菜单 */
+const initNavMenu = (router, store) => {
+  if (store.state.menus.length > 0) {
+    return
+  }
+  axios.get('/menu').then(resp => {
+    if (resp && resp.status === 200) {
+      let fmtRoutes = formatRoutes(resp.data.result)
+      router.addRoutes(fmtRoutes)
+      store.commit('initMenu', fmtRoutes)
+    }
+  })
+}
+
+/* 后端菜单数据转换 */
+const formatRoutes = (routes) => {
+  let fmtRoutes = []
+  routes.forEach(route => {
+    if (route.children) {
+      route.children = formatRoutes(route.children)
+    }
+    let fmtRoute = {
+      path: route.path,
+      component: resolve => {
+        require(['./components' + route.component + '.vue'], resolve)
+      },
+      name: route.name,
+      nameZh: route.nameZh,
+      meta: {
+        requireAuth: true
+      },
+      children: route.children
+    }
+    fmtRoutes.push(fmtRoute)
+  })
+  return fmtRoutes
+}
 
 /* eslint-disable no-new */
 new Vue({

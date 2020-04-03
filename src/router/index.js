@@ -13,9 +13,9 @@ import IndexBuy from '@/components/buy/IndexBuy'
 import Bought from '@/components/buy/Bought'
 import Buying from '@/components/buy/Buying'
 import Register from '@/components/register'
-import SellEdit from '@/components/sell/SellEdit'
 import UserManager from '@/components/admin/UserManager'
 import CheckItem from '@/components/manager/CheckItem'
+import SellEdit from '@/components/sell/SellEdit'
 Vue.use(Router)
 
 export default new Router({
