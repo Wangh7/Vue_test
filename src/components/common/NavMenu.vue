@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :default-active="'/index'"
+    :default-active="currentPath"
     router
     mode="horizontal"
     background-color="#545c64"
@@ -26,6 +26,9 @@ export default {
   computed: {
     menus () {
       return this.$store.state.menus
+    },
+    currentPath () {
+      return '/' + this.$route.path.split('/')[1]
     }
   },
   methods: {
