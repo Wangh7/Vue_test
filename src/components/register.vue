@@ -87,7 +87,7 @@ export default {
             .post('/register', {
               username: this.registerForm.username,
               password: this.registerForm.password,
-              usertype: 'user',
+              nickname: '用户',
               phone: this.registerForm.phone
             })
             .then(resp => {

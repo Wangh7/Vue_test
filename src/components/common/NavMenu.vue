@@ -15,7 +15,7 @@
       退出登录
     </el-menu-item>
     <el-menu-item style="float: right;">
-      欢迎您，{{ $store.state.user.username }}
+      欢迎您，{{ $store.state.user.nickname }}
     </el-menu-item>
   </el-menu>
 </template>
