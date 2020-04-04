@@ -68,7 +68,7 @@ export default {
         //   }
         // })
         .then(resp => {
-          if(resp.data.code === 200) {
+          if (resp.data.code === 200) {
             let data = resp.data.result
             _this.$store.commit('login', data)
             this.$router.replace({path: '/index'})

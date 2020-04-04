@@ -1,11 +1,10 @@
 <template>
-
-  <div>Role Manager</div>
+<div>IndexAdmin</div>
 </template>
 
 <script>
 export default {
-    name: 'RoleManager'
+    name: 'IndexAdmin'
 }
 </script>
 

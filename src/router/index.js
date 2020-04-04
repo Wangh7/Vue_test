@@ -16,6 +16,9 @@ import Register from '@/components/register'
 import UserManager from '@/components/admin/UserManager'
 import CheckItem from '@/components/manager/CheckItem'
 import SellEdit from '@/components/sell/SellEdit'
+import Admin from '@/components/admin/Admin'
+import IndexAdmin from '@/components/admin/IndexAdmin'
+import RoleManager from '@/components/admin/RoleManager'
 Vue.use(Router)
 
 export default new Router({
@@ -41,14 +44,6 @@ export default new Router({
           path: '/check',
           name: 'CheckItem',
           component: CheckItem,
-          meta: {
-            requireAuth: true
-          }
-        },
-        {
-          path: '/user',
-          name: 'UserManager',
-          component: UserManager,
           meta: {
             requireAuth: true
           }
@@ -135,6 +130,38 @@ export default new Router({
               path: '/sell/sold',
               name: 'Sold',
               component: Sold,
+              meta: {
+                requireAuth: true
+              }
+            }
+          ]
+        },
+        {
+          path: '/admin',
+          name: 'Admin',
+          component: Admin,
+          redirect: '/admin/index',
+          children: [
+            {
+              path: '/admin/index',
+              name: 'IndexAdmin',
+              component: IndexAdmin,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/admin/user',
+              name: 'UserManager',
+              component: UserManager,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/admin/role',
+              name: 'RoleManager',
+              component: RoleManager,
               meta: {
                 requireAuth: true
               }

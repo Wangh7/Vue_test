@@ -190,6 +190,7 @@ export default {
             }).then(resp => {
             if (resp && resp.status === 200) {
               alert('修改成功')
+              this.loadItems()
             } else {
               alert('修改失败')
               return false
