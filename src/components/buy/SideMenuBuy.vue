@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="/buy/index"
+    :default-active="currentPath"
     class="el-menu-vertical-demo"
     router>
     <el-menu-item v-for="(side,i) in sidelist" :key="i" :index="side.index">
@@ -13,6 +13,11 @@
 <script>
 export default {
   name: 'SideMenuBuy',
+  computed: {
+    currentPath () {
+      return '/buy/' + this.$route.path.split('/')[2]
+    }
+  },
   data () {
     return {
       sidelist: [

@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="/admin/index"
+    :default-active="currentPath"
     class="el-menu-vertical-demo"
     router>
     <el-menu-item v-for="(side,i) in sidelist" :key="i" :index="side.index">
@@ -13,6 +13,11 @@
 <script>
 export default {
   name: 'SideMenuAdmin',
+  computed: {
+    currentPath () {
+      return '/admin/' + this.$route.path.split('/')[2]
+    }
+  },
   data () {
     return {
       sidelist: [
