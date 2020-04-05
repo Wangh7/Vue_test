@@ -79,6 +79,9 @@
         <el-form-item label="手机" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号码"></el-input>
         </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-button type="warning" @click="resetPassword()">重置密码</el-button>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="warning" @click="resetForm('form')">重置</el-button>
@@ -130,6 +133,30 @@ export default {
         if (resp && resp.status === 200) {
           _this.users = resp.data
         }
+      })
+    },
+    resetPassword () {
+      this.$confirm('确认重置密码？', '警告', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios.post('/user/pass', {
+          username: this.form.username
+        })
+          .then(resp => {
+            if (resp && resp.status === 200) {
+              this.$message({
+                type: 'success',
+                message: resp.data.message
+              })
+            } else {
+              this.$message({
+                type: 'danger',
+                message: resp.data.message
+              })
+            }
+          })
       })
     },
     submitForm (formName) {
