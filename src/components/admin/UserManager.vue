@@ -37,7 +37,7 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row, scope)">编辑
+            @click="handleEdit(scope.row)">编辑
           </el-button>
           <el-popover
             placement="top"
@@ -82,6 +82,11 @@
         <el-form-item label="密码" prop="password">
           <el-button type="warning" @click="resetPassword()">重置密码</el-button>
         </el-form-item>
+        <el-form-item label="角色分配" prop="roles">
+          <el-checkbox-group v-model="selectedRolesIds">
+            <el-checkbox v-for="(role,i) in roles" :key="i" :label="role.id">{{role.nameZh}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="warning" @click="resetForm('form')">重置</el-button>
@@ -101,6 +106,8 @@ export default {
   data () {
     return {
       users: [],
+      roles: [],
+      selectedRolesIds: [],
       currentPage: 1,
       pageSize: 10,
       popVisible: false,
@@ -123,6 +130,7 @@ export default {
   },
   mounted: function () {
     this.loadUsers()
+    this.loadRoles()
   },
   methods: {
     // 利用axios发送get请求，接收到成功200代码后，把data数据替换为后端返回的数据
@@ -132,6 +140,14 @@ export default {
       this.$axios.get('/user').then(resp => {
         if (resp && resp.status === 200) {
           _this.users = resp.data
+        }
+      })
+    },
+    loadRoles () {
+      let _this = this
+      this.$axios.get('/role').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.roles = resp.data.result
         }
       })
     },
@@ -162,16 +178,26 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogFormVisible = false
+          let _this = this
+          let roles = []
+          for (let i = 0; i < _this.selectedRolesIds.length; i++) {
+            for (let j = 0; j < _this.roles.length; j++) {
+              if (_this.selectedRolesIds[i] === _this.roles[j].id) {
+                roles.push(_this.roles[j])
+              }
+            }
+          }
           this.$axios
             .post('/user', {
               username: this.form.username,
               nickname: this.form.nickname,
-              phone: this.form.phone
+              phone: this.form.phone,
+              roles: roles
             })
             .then(resp => {
               if (resp && resp.status === 200) {
                 alert('修改成功')
+                this.dialogFormVisible = false
                 this.loadUsers()
               } else {
                 alert('修改失败')
@@ -187,8 +213,13 @@ export default {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
-    handleEdit (index, row, scope) {
+    handleEdit (row) {
       this.dialogFormVisible = true
+      let roleIds = []
+      for (let i = 0; i < row.roles.length; i++) {
+        roleIds.push(row.roles[i].id)
+      }
+      this.selectedRolesIds = roleIds
       this.$nextTick(function () {
         this.form = {
           id: row.id,
