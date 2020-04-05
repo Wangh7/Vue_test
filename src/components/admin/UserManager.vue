@@ -6,7 +6,7 @@
       <el-table-column
         prop="id"
         label="ID"
-        width="180px">
+        width="100px">
       </el-table-column>
       <el-table-column
         prop="username"
@@ -22,6 +22,16 @@
         prop="phone"
         label="手机"
         width="180px">
+      </el-table-column>
+      <el-table-column
+        label="启用状态"
+        width="80px">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.enabled"
+            @change="(value) => commitStatusChange(value, scope.row)">
+          </el-switch>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -176,6 +186,25 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    commitStatusChange (value, user) {
+      if (user.username !== 'admin') {
+        this.$axios.put('/user/status', {
+          enabled: value,
+          username: user.username
+        }).then(resp => {
+          if (resp && resp.data.code === 200) {
+            if (value) {
+              this.$message('用户 ' + user.username + ' 已启用')
+            } else {
+              this.$message('用户 ' + user.username + ' 已禁用')
+            }
+          }
+        })
+      } else {
+        user.enabled = true
+        this.$alert('不能禁用管理员用户')
+      }
     }
   }
 }

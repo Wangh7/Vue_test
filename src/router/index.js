@@ -15,10 +15,13 @@ import Buying from '@/components/buy/Buying'
 import Register from '@/components/register'
 import UserManager from '@/components/admin/UserManager'
 import CheckItem from '@/components/manager/CheckItem'
-import SellEdit from '@/components/sell/SellEdit'
+// import SellEdit from '@/components/sell/SellEdit'
 import Admin from '@/components/admin/Admin'
 import IndexAdmin from '@/components/admin/IndexAdmin'
 import RoleManager from '@/components/admin/RoleManager'
+import Profile from '@/components/Info/Profile'
+import Info from '@/components/Info/Info'
+import Pass from '@/components/Info/Pass'
 Vue.use(Router)
 
 export default new Router({
@@ -59,10 +62,27 @@ export default new Router({
         {
           path: '/info',
           name: 'Info',
-          component: SellEdit,
-          meta: {
-            requireAuth: true
-          }
+          component: Info,
+          redirect: '/info/profile',
+          children: [
+            {
+              path: '/info/profile',
+              name: 'Profile',
+              component: Profile,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/info/pass',
+              name: 'Pass',
+              component: Pass,
+              meta: {
+                requireAuth: true
+              }
+            }
+
+          ]
         },
         {
           path: '/shop',
