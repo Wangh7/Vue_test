@@ -5,7 +5,7 @@
       style="width: 1000px">
       <el-table-column
         prop="id"
-        label="ID"
+        label="用户ID"
         width="100px">
       </el-table-column>
       <el-table-column
@@ -128,7 +128,7 @@ export default {
       }
     }
   },
-  mounted: function () {
+  mounted () {
     this.loadUsers()
     this.loadRoles()
   },
