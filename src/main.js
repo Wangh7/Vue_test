@@ -32,6 +32,11 @@ Vue.use(ElementUI)
 }) */
 
 router.beforeEach((to, from, next) => {
+  if (to.matched.length === 0) {
+    next({
+      path: '/error/404'
+    })
+  }
   if (to.path.startsWith('/login')) {
     if (store.state.user.username) {
       axios.get('/authentication').then(resp => {
