@@ -22,6 +22,9 @@ import RoleManager from '@/components/admin/RoleManager'
 import Profile from '@/components/Info/Profile'
 import Info from '@/components/Info/Info'
 import Pass from '@/components/Info/Pass'
+import NotFound from '@/components/error/NotFound'
+import Forbidden from '@/components/error/Forbidden'
+import UnAuthorized from '@/components/error/UnAuthorized'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +39,21 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/error/404',
+      name: 'NotFound',
+      component: NotFound
+    },
+    {
+      path: '/error/403',
+      name: 'Forbidden',
+      component: Forbidden
+    },
+    {
+      path: '/error/401',
+      name: 'UnAuthorized',
+      component: UnAuthorized
     },
     {
       path: '/home',

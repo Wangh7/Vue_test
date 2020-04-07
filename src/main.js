@@ -32,14 +32,10 @@ Vue.use(ElementUI)
 }) */
 
 router.beforeEach((to, from, next) => {
-  if (store.state.user.username) {
-    initNavMenu(router, store)
-  }
-
   if (to.path.startsWith('/login')) {
-    if (store.state.user) {
+    if (store.state.user.username) {
       axios.get('/authentication').then(resp => {
-        if (resp.data) {
+        if (resp.data.code === 200) {
           next({
             path: '/index'
           })
@@ -52,10 +48,22 @@ router.beforeEach((to, from, next) => {
     }
   }
   if (to.meta.requireAuth) { /* 要去的路径是否需要登录 */
-    if (store.state.user) { /* 存储里是否有user信息 */
+    if (store.state.user.username) { /* 存储里是否有user信息 */
       axios.get('/authentication').then(resp => {
-        if (resp.data) { /* 前后端都正确 */
-          next()
+        if (resp.data.code === 200) { /* 前后端都正确 */
+          axios.get('/auth', {
+            params: {
+              url: to.path
+            }
+          }).then(resp => {
+            if (resp.data.code === 200) {
+              next()
+            } else {
+              next({
+                path: '/error/401'
+              })
+            }
+          })
         } else { /* 前端正确，后端错误 */
           next({
             path: '/login',
@@ -71,6 +79,9 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next()
+  }
+  if (store.state.user.username) {
+    initNavMenu(router, store)
   }
 })
 

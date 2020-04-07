@@ -76,6 +76,12 @@
             <el-checkbox v-for="(perm,i) in permissions" :key="i" :label="perm.id">{{perm.desc}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
+        <el-form-item label="菜单分配" prop="menus">
+          <el-checkbox-group v-model="selectedMenusIds">
+            <el-checkbox v-for="(menu,i) in menus" :key="i" :label="menu.id">{{menu.nameZh}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="warning" @click="resetForm('form')">重置</el-button>
@@ -153,10 +159,18 @@ export default {
         if (valid) {
           let _this = this
           let perms = []
+          let menus = []
           for (let i = 0; i < _this.selectedPermsIds.length; i++) {
             for (let j = 0; j < _this.permissions.length; j++) {
               if (_this.selectedPermsIds[i] === _this.permissions[j].id) {
                 perms.push(_this.permissions[j])
+              }
+            }
+          }
+          for (let i = 0; i < _this.selectedMenusIds.length; i++) {
+            for (let j = 0; j < _this.menus.length; j++) {
+              if (_this.selectedMenusIds[i] === _this.menus[j].id) {
+                menus.push(_this.menus[j])
               }
             }
           }
@@ -165,7 +179,8 @@ export default {
               id: this.form.id,
               name: this.form.name,
               nameZh: this.form.nameZh,
-              permissions: perms
+              permissions: perms,
+              menus: menus
             })
             .then(resp => {
               if (resp && resp.status === 200) {
@@ -189,10 +204,15 @@ export default {
     handleEdit (row) {
       this.dialogFormVisible = true
       let permIds = []
+      let menuIds = []
       for (let i = 0; i < row.permissions.length; i++) {
         permIds.push(row.permissions[i].id)
       }
       this.selectedPermsIds = permIds
+      for (let i = 0; i < row.menus.length; i++) {
+        menuIds.push(row.menus[i].id)
+      }
+      this.selectedMenusIds = menuIds
       this.$nextTick(function () {
         this.form = {
           id: row.id,
