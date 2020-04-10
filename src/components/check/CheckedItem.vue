@@ -22,6 +22,10 @@
         prop="status"
         label="状态"
         width="360px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status === 'F'">审核未通过</div>
+          <div v-if="scope.row.status === 'T'">审核通过</div>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination

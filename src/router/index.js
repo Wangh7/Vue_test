@@ -28,6 +28,10 @@ import UnAuthorized from '@/components/error/UnAuthorized'
 import Check from '@/components/check/Check'
 import IndexCheck from '@/components/check/IndexCheck'
 import CheckedItem from '@/components/check/CheckedItem'
+import Discount from '@/components/discount/Discount'
+import IndexDiscount from '@/components/discount/IndexDiscount'
+import ItemDiscount from '@/components/discount/ItemDiscount'
+import TimeDiscount from '@/components/discount/TimeDiscount'
 Vue.use(Router)
 
 export default new Router({
@@ -90,6 +94,38 @@ export default new Router({
               path: '/check/checked',
               name: 'CheckedItem',
               component: CheckedItem,
+              meta: {
+                requireAuth: true
+              }
+            }
+          ]
+        },
+        {
+          path: '/discount',
+          name: 'Discount',
+          component: Discount,
+          redirect: '/discount/index',
+          children: [
+            {
+              path: '/discount/index',
+              name: 'IndexDiscount',
+              component: IndexDiscount,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/discount/item',
+              name: 'ItemDiscount',
+              component: ItemDiscount,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/discount/time',
+              name: 'TimeDiscount',
+              component: TimeDiscount,
               meta: {
                 requireAuth: true
               }

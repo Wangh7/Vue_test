@@ -56,22 +56,13 @@ export default {
           password: this.loginForm.password,
           remember: this.loginForm.rememberMe
         })
-        // .then(successResponse => {
-        //   if (successResponse.data.code === 200) {
-        //     _this.$store.commit('login', _this.loginForm) // 触发store中的login方法 把loginform对象传递给store中的user对象
-        //
-        //     // var path = this.$route.query.redirect
-        //     // this.$route.replace({path: path})
-        //     // this.$route.replace({path: path === '/' || path === undefined ? '/index' : path})
-        //     // 获取登录前页面的路径并跳转，如果该路径不存在，则跳转到首页
-        //     this.$router.replace({path: '/index'})
-        //   }
-        // })
         .then(resp => {
           if (resp.data.code === 200) {
             let data = resp.data.result
             _this.$store.commit('login', data)
-            this.$router.replace({path: '/index'})
+            let path = this.$route.query.redirect
+            // this.$router.replace({path: '/index'})
+            this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
           } else {
             this.$alert(resp.data.message, '提示', {
               confirmButtonText: '确定'
