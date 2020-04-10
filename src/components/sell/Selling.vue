@@ -9,9 +9,6 @@
         class="demo-ruleForm"
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
-        <el-form-item label="礼品卡名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称"></el-input>
-        </el-form-item>
         <el-form-item label="礼品卡种类" prop="type">
           <el-select v-model="form.type" placeholder="请选择种类">
             <el-option v-for="(item,i) in types" :key="i"
@@ -19,26 +16,21 @@
                        :value="item.typeId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="礼品卡面额" prop="oldPrice">
-          <el-input v-model="form.oldPrice" placeholder="请输入面额"></el-input>
+        <el-form-item label="礼品卡卡号" prop="cardNum">
+          <el-input v-model="form.cardNum" placeholder="请输入卡号"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡售价" prop="newPrice">
-          <el-input v-model="form.newPrice" placeholder="请输入售价"></el-input>
+        <el-form-item label="礼品卡密码" prop="cardPass">
+          <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡到期时间" required>
-          <el-col :span="10">
-            <el-form-item prop="date1">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
-                              style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2" style="text-align: center">-</el-col>
-          <el-col :span="12">
-            <el-form-item prop="date2">
-              <el-time-picker placeholder="选择时间" v-model="form.date2"
-                              style="width: 100%;" value-format="HH:mm:ss"></el-time-picker>
-            </el-form-item>
-          </el-col>
+        <el-form-item label="礼品卡余额" prop="price">
+          <el-input v-model="form.price" placeholder="请输入余额"></el-input>
+        </el-form-item>
+        <el-form-item label="礼品卡到期日期" required>
+          <el-form-item prop="date">
+            <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
+                            style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </el-form-item>
+
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('form')">立即发布</el-button>
@@ -75,32 +67,27 @@ export default {
       form: {
         name: '',
         type: '',
-        oldPrice: '',
-        newPrice: '',
-        date1: '',
-        date2: ''
+        price: '',
+        date: '',
+        cardNum: '',
+        cardPass: ''
       },
       rules: {
-        name: [
-          {required: true, message: '请输入礼品卡名称', trigger: 'blur'},
-          {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
+        cardNum: [
+          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'}
+        ],
+        cardPass: [
+          {required: true, message: '请输入礼品卡卡密', trigger: 'blur'}
         ],
         type: [
           {required: true, message: '请选择礼品卡种类', trigger: 'change'}
         ],
-        oldPrice: [
+        price: [
           {required: true, message: '请输入金额', trigger: 'blur'},
           {validator: isPriceVlidator}
         ],
-        newPrice: [
-          {required: true, message: '请输入金额', trigger: 'blur'},
-          {validator: isPriceVlidator}
-        ],
-        date1: [
+        date: [
           {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
-        ],
-        date2: [
-          {type: 'string', required: true, message: '请选择时间', trigger: 'change'}
         ]
       }
     }
@@ -122,19 +109,22 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$axios
-            .post('/items', {
-              userId: '1',
-              oldPrice: parseFloat(this.form.oldPrice),
-              newPrice: parseFloat(this.form.newPrice),
-              itemName: this.form.name,
-              createDate: cTime(),
-              dueDate: this.form.date1 + ' ' + this.form.date2,
-              itemType: {typeId: this.form.type}
+            .post('/items/sell', {
+              userId: this.$store.state.user.userId,
+              managerId: '0',
+              price: parseFloat(this.form.price),
+              cardNum: this.form.cardNum,
+              cardPass: this.form.cardPass,
+              createTime: cTime(),
+              dueTime: this.form.date + ' 00:00:00',
+              itemType: {typeId: this.form.type},
+              status: 'N'
             }).then(resp => {
-            if (resp && resp.status === 200) {
-              alert('提交成功')
+            if (resp && resp.data.code === 200) {
+              alert(resp.data.message)
+              this.resetForm(formName)
             } else {
-              alert('提交失败')
+              alert(resp.data.message)
               return false
             }
           })

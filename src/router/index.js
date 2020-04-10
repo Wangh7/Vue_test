@@ -14,7 +14,7 @@ import Bought from '@/components/buy/Bought'
 import Buying from '@/components/buy/Buying'
 import Register from '@/components/register'
 import UserManager from '@/components/admin/UserManager'
-import CheckItem from '@/components/manager/CheckItem'
+import CheckItem from '@/components/check/CheckItem'
 // import SellEdit from '@/components/sell/SellEdit'
 import Admin from '@/components/admin/Admin'
 import IndexAdmin from '@/components/admin/IndexAdmin'
@@ -25,6 +25,9 @@ import Pass from '@/components/Info/Pass'
 import NotFound from '@/components/error/NotFound'
 import Forbidden from '@/components/error/Forbidden'
 import UnAuthorized from '@/components/error/UnAuthorized'
+import Check from '@/components/check/Check'
+import IndexCheck from '@/components/check/IndexCheck'
+import CheckedItem from '@/components/check/CheckedItem'
 Vue.use(Router)
 
 export default new Router({
@@ -63,11 +66,35 @@ export default new Router({
       children: [
         {
           path: '/check',
-          name: 'CheckItem',
-          component: CheckItem,
-          meta: {
-            requireAuth: true
-          }
+          name: 'Check',
+          component: Check,
+          redirect: '/check/index',
+          children: [
+            {
+              path: '/check/index',
+              name: 'IndexCheck',
+              component: IndexCheck,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/check/item',
+              name: 'CheckItem',
+              component: CheckItem,
+              meta: {
+                requireAuth: true
+              }
+            },
+            {
+              path: '/check/checked',
+              name: 'CheckedItem',
+              component: CheckedItem,
+              meta: {
+                requireAuth: true
+              }
+            }
+          ]
         },
         {
           path: '/index',

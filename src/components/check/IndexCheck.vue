@@ -1,11 +1,10 @@
 <template>
-
-  <div>check item</div>
+  <div>index check</div>
 </template>
 
 <script>
 export default {
-    name: 'CheckItem'
+    name: 'IndexCheck'
 }
 </script>
 

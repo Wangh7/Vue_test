@@ -4,24 +4,35 @@
       :data="items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       style="width: 1000px">
       <el-table-column
-        prop="createDate"
+        prop="createTime"
         label="发布日期"
         width="180px">
       </el-table-column>
       <el-table-column
-        prop="itemName"
-        label="卡片名称"
+        prop="checkTime"
+        label="审查日期"
+        width="180px">
+      </el-table-column>
+      <el-table-column
+        prop="itemType.typeName"
+        label="卡片种类"
         width="180px">
       </el-table-column>
       <el-table-column
         prop="status"
         label="当前状态"
-        width="360px">
+        width="180px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status === 'N'">等待审核</div>
+          <div v-if="scope.row.status === 'F'">审核未通过</div>
+          <div v-if="scope.row.status === 'T'">审核通过</div>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
+            :disabled="scope.row.status !== 'N'"
             @click="handleEdit(scope.$index, scope.row, scope)">编辑
           </el-button>
           <el-popover
@@ -34,7 +45,7 @@
               </el-button>
               <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>
             </div>
-            <el-button size="mini" type="danger" slot="reference">删除</el-button>
+            <el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -55,9 +66,6 @@
         class="demo-ruleForm"
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
-        <el-form-item label="礼品卡名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称"></el-input>
-        </el-form-item>
         <el-form-item label="礼品卡种类" prop="type">
           <el-select v-model="form.type" placeholder="请选择种类">
             <el-option v-for="(item,i) in types" :key="i"
@@ -65,28 +73,20 @@
                        :value="item.typeId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="礼品卡面额" prop="oldPrice">
-          <el-input v-model="form.oldPrice" placeholder="请输入面额"></el-input>
+        <el-form-item label="礼品卡卡号" prop="cardNum">
+          <el-input v-model="form.cardNum" placeholder="请输入卡号"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡售价" prop="newPrice">
-          <el-input v-model="form.newPrice" placeholder="请输入售价"></el-input>
+        <el-form-item label="礼品卡密码" prop="cardPass">
+          <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡到期时间" required>
-          <el-col :span="10">
-            <el-form-item prop="date1">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
-                              style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2" style="text-align: center">-</el-col>
-          <el-col :span="12">
-            <el-form-item prop="date2">
-              <el-time-picker placeholder="选择时间" v-model="form.date2"
-                              style="width: 100%;" value-format="HH:mm:ss"></el-time-picker>
-            </el-form-item>
-          </el-col>
+        <el-form-item label="礼品卡余额" prop="price">
+          <el-input v-model="form.price" placeholder="请输入余额"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="礼品卡到期日期" required>
+          <el-form-item prop="date">
+            <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
+                            style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+          </el-form-item>
 
         </el-form-item>
       </el-form>
@@ -116,34 +116,30 @@ export default {
       popVisible: false,
       dialogFormVisible: false,
       form: {
-        name: '',
+        id: '',
         type: '',
-        oldPrice: '',
-        newPrice: '',
-        date1: '',
-        date2: ''
+        price: '',
+        date: '',
+        cardNum: '',
+        cardPass: '',
+        createTime: ''
       },
       rules: {
-        name: [
-          {required: true, message: '请输入礼品卡名称', trigger: 'blur'},
-          {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
+        cardNum: [
+          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'}
+        ],
+        cardPass: [
+          {required: true, message: '请输入礼品卡卡密', trigger: 'blur'}
         ],
         type: [
           {required: true, message: '请选择礼品卡种类', trigger: 'change'}
         ],
-        oldPrice: [
+        price: [
           {required: true, message: '请输入金额', trigger: 'blur'},
           {validator: isPriceVlidator}
         ],
-        newPrice: [
-          {required: true, message: '请输入金额', trigger: 'blur'},
-          {validator: isPriceVlidator}
-        ],
-        date1: [
+        date: [
           {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
-        ],
-        date2: [
-          {type: 'string', required: true, message: '请选择时间', trigger: 'change'}
         ]
       }
     }
@@ -158,7 +154,7 @@ export default {
     // 利用data和template里相应元素双向绑定，实现页面动态渲染
     loadItems () {
       let _this = this
-      this.$axios.get('/items').then(resp => {
+      this.$axios.get('/items/sell').then(resp => {
         if (resp && resp.status === 200) {
           _this.items = resp.data
         }
@@ -177,22 +173,23 @@ export default {
         if (valid) {
           this.dialogFormVisible = false
           this.$axios
-            .post('/items', {
-              userId: '1',
-              createDate: this.form.createDate,
-              status: this.form.status,
+            .post('/items/sell', {
+              userId: this.$store.state.user.userId,
               itemId: this.form.id,
-              oldPrice: parseFloat(this.form.oldPrice),
-              newPrice: parseFloat(this.form.newPrice),
-              itemName: this.form.name,
-              dueDate: this.form.date1 + ' ' + this.form.date2,
-              itemType: {typeId: this.form.type}
+              managerId: '0',
+              price: parseFloat(this.form.price),
+              cardNum: this.form.cardNum,
+              cardPass: this.form.cardPass,
+              createTime: this.form.createTime,
+              dueTime: this.form.date + ' 00:00:00',
+              itemType: {typeId: this.form.type},
+              status: 'N'
             }).then(resp => {
-            if (resp && resp.status === 200) {
-              alert('修改成功')
+            if (resp && resp.data.code === 200) {
+              alert(resp.data.message)
               this.loadItems()
             } else {
-              alert('修改失败')
+              alert(resp.data.message)
               return false
             }
           })
@@ -210,23 +207,23 @@ export default {
       this.$nextTick(function () {
         this.form = {
           id: row.itemId,
-          createDate: row.createDate,
+          createTime: row.createTime,
           status: row.status,
-          name: row.itemName,
           type: row.itemType.typeId,
-          oldPrice: row.oldPrice,
-          newPrice: row.newPrice,
-          date1: row.dueDate.split(' ')[0],
-          date2: row.dueDate.split(' ')[1]
+          price: row.price,
+          date: row.dueTime.split(' ')[0],
+          cardNum: row.cardNum,
+          cardPass: row.cardPass
         }
       })
     },
     handleDelete (index, row, scope) {
       scope._self.$refs[`popover-${index}`].doClose()
-      this.$axios.post('/items/delete', {
+      this.$axios.post('/items/sell/delete', {
         itemId: row.itemId
       }).then(resp => {
         if (resp && resp.status === 200) {
+          this.loadItems()
           alert('删除成功')
         } else {
           alert('删除失败')
