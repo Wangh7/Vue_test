@@ -6,7 +6,7 @@
       <el-table-column
         prop="typeId"
         label="ID"
-        width="180px">
+        width="100px">
       </el-table-column>
       <el-table-column
         prop="typeName"
@@ -14,9 +14,14 @@
         width="180px">
       </el-table-column>
       <el-table-column
-        prop="typeDiscount"
-        label="折扣"
-        width="360px">
+        prop="typeDiscountBuy"
+        label="收购折扣"
+        width="160px">
+      </el-table-column>
+      <el-table-column
+        prop="typeDiscountSell"
+        label="售卖折扣"
+        width="160px">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -59,14 +64,16 @@
         <el-form-item label="代码">
           <div>{{form.code}}</div>
         </el-form-item>
-        <el-form-item label="折扣">
-          <el-input-number v-model="form.discount" :precision="2" :step="0.01" :max="0.99"
-                           :min="0.01"></el-input-number>
+        <el-form-item label="收购折扣">
+          <el-input-number v-model="form.discountBuy" :precision="2" :step="0.01" :max="0.99" :min="0.01"></el-input-number>
+        </el-form-item>
+        <el-form-item label="售卖折扣">
+          <el-input-number v-model="form.discountSell" :precision="2" :step="0.01" :max="0.99" :min="0.01"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="success" @click="submit()">修改</el-button>
+        <el-button type="primary" @click="checkdiscount">修改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -86,7 +93,8 @@ export default {
         id: '',
         name: '',
         code: '',
-        discount: ''
+        discountBuy: '',
+        discountSell: ''
       }
     }
   },
@@ -102,12 +110,26 @@ export default {
         }
       })
     },
+    checkdiscount () {
+      if (this.form.discountSell < this.form.discountBuy) {
+        this.$confirm('售卖折扣小于收购折扣，宁认真的吗？Σ( ° △ °|||)︴', '血亏！', {
+          confirmButtonText: '奥利给',
+          cancelButtonText: '手残了',
+          type: 'warning'
+        }).then(() => {
+          this.submit()
+        })
+      } else {
+        this.submit()
+      }
+    },
     submit () {
       this.$axios.post('/discount/type', {
         typeId: this.form.id,
         typeName: this.form.name,
         typeCode: this.form.code,
-        typeDiscount: this.form.discount
+        typeDiscountBuy: this.form.discountBuy,
+        typeDiscountSell: this.form.discountSell
       }).then(resp => {
         if (resp && resp.data.code === 200) {
           this.dialogFormVisible = false
@@ -125,7 +147,8 @@ export default {
           id: row.typeId,
           name: row.typeName,
           code: row.typeCode,
-          discount: row.typeDiscount
+          discountBuy: row.typeDiscountBuy,
+          discountSell: row.typeDiscountSell
         }
       })
     },

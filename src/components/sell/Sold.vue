@@ -67,10 +67,10 @@
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
         <el-form-item label="礼品卡种类" prop="type">
-          <el-select v-model="form.type" placeholder="请选择种类">
-            <el-option v-for="(item,i) in types" :key="i"
-                       :label="item.typeName"
-                       :value="item.typeId"></el-option>
+          <el-select v-model="form.type" value-key="typeId" placeholder="请选择种类">
+            <el-option v-for="(type,i) in types" :key="i"
+                       :label="type.typeName+'---'+type.typeDiscountBuy*100+'折'"
+                       :value="type"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="礼品卡卡号" prop="cardNum">
@@ -80,7 +80,14 @@
           <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
         <el-form-item label="礼品卡余额" prop="price">
-          <el-input v-model="form.price" placeholder="请输入余额"></el-input>
+          <el-row>
+            <el-col :span="14">
+              <el-input v-model="form.price" placeholder="请输入余额"></el-input>
+            </el-col>
+            <el-col :span="10">
+              <div v-if="form.type && form.price">(预计收入：{{(form.price*form.type.typeDiscountBuy).toFixed(2)}}元)</div>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="礼品卡到期日期" required>
           <el-form-item prop="date">
@@ -182,7 +189,7 @@ export default {
               cardPass: this.form.cardPass,
               createTime: this.form.createTime,
               dueTime: this.form.date + ' 00:00:00',
-              itemType: {typeId: this.form.type},
+              itemType: this.form.type,
               status: 'N'
             }).then(resp => {
             if (resp && resp.data.code === 200) {
@@ -209,7 +216,7 @@ export default {
           id: row.itemId,
           createTime: row.createTime,
           status: row.status,
-          type: row.itemType.typeId,
+          type: row.itemType,
           price: row.price,
           date: row.dueTime.split(' ')[0],
           cardNum: row.cardNum,
