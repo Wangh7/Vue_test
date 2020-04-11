@@ -213,7 +213,7 @@ export default {
           price: row.price,
           date: row.dueTime.split(' ')[0],
           cardNum: row.cardNum,
-          cardPass: row.cardPass
+          cardPass: ''
         }
       })
     },

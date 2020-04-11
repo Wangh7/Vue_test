@@ -61,7 +61,7 @@
           <div>{{form.cardNum}}</div>
         </el-form-item>
         <el-form-item label="礼品卡密码">
-          <div>{{form.cardPass}}</div>
+          <el-button type="primary" @click="showPass(form.cardPass)">显示</el-button>
         </el-form-item>
         <el-form-item label="礼品卡余额">
           <div>{{form.price}}</div>
@@ -192,6 +192,15 @@ export default {
           cardNum: row.cardNum,
           cardPass: row.cardPass
         }
+      })
+    },
+    showPass (pass) {
+      this.$axios.get('/check/pass', {
+        params: {
+          pass: pass
+        }
+      }).then(resp => {
+        alert(resp.data)
       })
     },
     resetForm (formName) {
