@@ -32,6 +32,7 @@ import Discount from '@/components/discount/Discount'
 import IndexDiscount from '@/components/discount/IndexDiscount'
 import ItemDiscount from '@/components/discount/ItemDiscount'
 import TimeDiscount from '@/components/discount/TimeDiscount'
+import Price from '@/components/Info/Price'
 Vue.use(Router)
 
 export default new Router({
@@ -161,8 +162,15 @@ export default new Router({
               meta: {
                 requireAuth: true
               }
+            },
+            {
+              path: '/info/price',
+              name: 'Price',
+              component: Price,
+              meta: {
+                requireAuth: true
+              }
             }
-
           ]
         },
         {
