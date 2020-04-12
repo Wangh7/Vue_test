@@ -2,15 +2,19 @@
   <div>
     <el-table
       :data="items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      style="width: 1000px">
+      style="width: 1000px"
+      :default-sort="{prop:'createTime',order:'descending'}"
+      ref="table">
       <el-table-column
         prop="createTime"
         label="发布日期"
+        sortable
         width="180px">
       </el-table-column>
       <el-table-column
         prop="checkTime"
         label="审查日期"
+        sortable
         width="180px">
       </el-table-column>
       <el-table-column
@@ -21,6 +25,7 @@
       <el-table-column
         prop="status"
         label="当前状态"
+        sortable
         width="180px">
         <template slot-scope="scope">
           <div v-if="scope.row.status === 'N'">等待审核</div>
@@ -30,6 +35,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-button type="text" @click="toggleExpand(scope.row)">查看进度</el-button>
           <el-button
             size="mini"
             :disabled="scope.row.status !== 'N'"
@@ -47,6 +53,21 @@
             </div>
             <el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>
           </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column type="expand" width="1">
+        <template slot-scope="props">
+          <el-timeline v-loading="loading">
+            <el-timeline-item
+              v-for="(timeline,i) in timelines"
+              :key="i"
+              :icon="timeline.icon"
+              :type="timeline.type"
+              size="large"
+              :timestamp="timeline.timestamp">
+              {{timeline.content}}
+            </el-timeline-item>
+          </el-timeline>
         </template>
       </el-table-column>
     </el-table>
@@ -111,6 +132,18 @@
 import SellEdit from './SellEdit'
 import {isPriceVlidator} from '../../utils/validator'
 
+let cTime = function () {
+  let myDate = new Date()
+  let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
+  let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
+  let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
+  let year = myDate.getFullYear()
+  let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
+  let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
+  let str = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec
+  console.log(str)
+  return str
+}
 export default {
   name: 'Sold',
   components: SellEdit,
@@ -118,9 +151,11 @@ export default {
     return {
       items: [],
       types: [],
+      timelines: [],
       currentPage: 1,
       pageSize: 10,
       popVisible: false,
+      loading: true,
       dialogFormVisible: false,
       form: {
         id: '',
@@ -175,6 +210,32 @@ export default {
         }
       })
     },
+    loadTimeLine (itemId) {
+      let _this = this
+      this.$axios.get('/items/timeline', {
+        params: {
+          item_id: itemId,
+          status: 'S'
+        }
+      }).then(resp => {
+        if (resp && resp.status === 200) {
+          _this.timelines = resp.data
+          this.loading = false
+        }
+      })
+    },
+    toggleExpand (row) {
+      this.timelines = []
+      this.loading = true
+      this.loadTimeLine(row.itemId)
+      let $table = this.$refs.table
+      this.items.map((item) => {
+        if (row.itemId !== item.itemId) {
+          $table.toggleRowExpansion(item, false)
+        }
+      })
+      $table.toggleRowExpansion(row)
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -187,7 +248,7 @@ export default {
               price: parseFloat(this.form.price),
               cardNum: this.form.cardNum,
               cardPass: this.form.cardPass,
-              createTime: this.form.createTime,
+              createTime: cTime(),
               dueTime: this.form.date + ' 00:00:00',
               itemType: this.form.type,
               status: 'N'
