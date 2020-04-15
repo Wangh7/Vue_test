@@ -1,41 +1,40 @@
 <template>
   <el-menu
-    default-active="2"
+    default-active="all"
     class="el-menu-vertical-demo"
-    @open="handleOpen"
-    @close="handleClose">
-    <el-submenu index="1">
-      <template slot="title">
-        <i class="el-icon-location"></i>
-        <span>导航一</span>
-      </template>
-      <el-menu-item-group>
-        <template slot="title">分组一</template>
-        <el-menu-item index="1-1">选项1</el-menu-item>
-        <el-menu-item index="1-2">选项2</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="分组2">
-        <el-menu-item index="1-3">选项3</el-menu-item>
-      </el-menu-item-group>
-      <el-submenu index="1-4">
-        <template slot="title">选项4</template>
-        <el-menu-item index="1-4-1">选项1</el-menu-item>
-      </el-submenu>
-    </el-submenu>
-    <el-menu-item index="2">
-      <i class="el-icon-menu"></i>
-      <span slot="title">导航二</span>
-    </el-menu-item>
-    <el-menu-item index="3">
-      <i class="el-icon-setting"></i>
-      <span slot="title">导航三</span>
-    </el-menu-item>
+    @select="handleSelect">
+    <div>请选择种类</div>
+    <el-menu-item :index="'all'">所有种类</el-menu-item>
+    <el-menu-item v-for="(type,i) in types" :key="i" :index="type.typeCode">{{type.typeName}}</el-menu-item>
   </el-menu>
 </template>
 
 <script>
 export default {
-    name: 'SideMenu'
+  name: 'SideMenu',
+  data () {
+    return {
+      types: [],
+      typeCode: ''
+    }
+  },
+  mounted () {
+    this.loadTypes()
+  },
+  methods: {
+    loadTypes () {
+      let _this = this
+      this.$axios.get('/items/types').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.types = resp.data
+        }
+      })
+    },
+    handleSelect (index) {
+      this.typeCode = index
+      this.$emit('indexSelect')
+    }
+  }
 }
 </script>
 

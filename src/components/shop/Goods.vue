@@ -9,11 +9,11 @@
         shadow="hover">
         <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
         <div style="padding: 14px;">
-          <span>{{item.itemName}}</span>
+          <span>面额：{{item.price.amount}}</span>
           <br>
-          <span>面额：{{item.oldPrice}}</span>
+          <span>价格：{{(item.price.amount*item.itemType.typeDiscountSell).toFixed(2)}}</span>
           <br>
-          <span>价格：{{item.newPrice}}</span>
+          <span>到期时间：{{item.dueTime.substring(0,10)}}</span>
           <div class="bottom clearfix">
             <el-button type="text" class="button">查看详情</el-button>
           </div>
@@ -37,26 +37,35 @@ export default {
   data () {
     return {
       items: [],
+      types: [],
       currentPage: 1,
       pageSize: 8
     }
   },
   // 钩子函数
-  mounted: function () {
+  mounted () {
     this.loadItems()
+    this.loadTypes()
   },
   methods: {
     // 利用axios发送get请求，接收到成功200代码后，把data数据替换为后端返回的数据
     // 利用data和template里相应元素双向绑定，实现页面动态渲染
     loadItems () {
-      var _this = this
+      let _this = this
       this.$axios.get('/items').then(resp => {
         if (resp && resp.status === 200) {
           _this.items = resp.data
         }
       })
     },
-
+    loadTypes () {
+      let _this = this
+      this.$axios.get('/items/types').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.types = resp.data
+        }
+      })
+    },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     }

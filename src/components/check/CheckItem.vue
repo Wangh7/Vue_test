@@ -143,11 +143,12 @@ export default {
           this.dialogFormVisible = false
           this.$axios
             .post('/check/success', {
-            itemId: this.form.id,
-            managerId: this.$store.state.user.userId,
-            newPassword: this.form.newPass,
-            checkTime: cTime()
-          }).then(resp => {
+              itemId: this.form.id,
+              managerId: this.$store.state.user.userId,
+              newPassword: this.form.newPass,
+              checkTime: cTime(),
+              price: this.form.price
+            }).then(resp => {
             if (resp && resp.data.code === 200) {
               alert(resp.data.message)
               this.loadItems()
