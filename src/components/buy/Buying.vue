@@ -1,10 +1,129 @@
 <template>
-  <div>buying</div>
+  <div>
+    <el-table
+      :data="items"
+      style="width: 1000px"
+      :default-sort="{prop:'createTime',order:'descending'}"
+      @selection-change="handleSelectionChange"
+      ref="table">
+      <el-table-column
+        type="selection">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        label="收藏日期"
+        sortable
+        width="180px">
+      </el-table-column>
+      <el-table-column
+        prop="itemStock.itemType.typeName"
+        label="卡片种类"
+        sortable
+        width="140px">
+      </el-table-column>
+      <el-table-column
+        prop="itemStock.price.amount"
+        label="面额"
+        width="140px">
+      </el-table-column>
+      <el-table-column
+        prop="itemStock.dueTime"
+        label="有效期"
+        sortable
+        width="180px">
+      </el-table-column>
+      <el-table-column
+        label="售价"
+        width="180px">
+        <template slot-scope="scope">
+          <div>{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-popover
+            placement="top"
+            width="160"
+            :ref="`popover-${scope.$index}`">
+            <p>确定删除吗？</p>
+            <div style="text-align: right;margin:0">
+              <el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消
+              </el-button>
+              <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>
+            </div>
+            <el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+    </el-table>
+    <br>
+    <el-row>
+      <el-col :span="18">
+        <div style="float: right;">共选择{{multipleSelection.length}}件，总计{{totalPrice}}元</div>
+      </el-col>
+      <el-col :span="6">
+        <el-button :disabled="multipleSelection.length === 0" type="success" @click="purchaseCheck">结算</el-button>
+      </el-col>
+    </el-row>
+
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'Buying'
+  name: 'Buying',
+  data () {
+    return {
+      items: [],
+      multipleSelection: [],
+      totalPrice: 0,
+      item_ids: []
+    }
+  },
+  mounted () {
+    this.loadItems()
+  },
+  methods: {
+    loadItems () {
+      let _this = this
+      this.$axios.get('/items/buy').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.items = resp.data
+        }
+      })
+    },
+    priceSum () {
+      this.totalPrice = 0
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        this.totalPrice += Number((this.multipleSelection[i].itemStock.price.amount * this.multipleSelection[i].itemStock.itemType.typeDiscountSell).toFixed(2))
+      }
+      this.totalPrice = this.totalPrice.toFixed(2)
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      this.priceSum()
+    },
+    purchase () {
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        console.log(i)
+        this.item_ids.push(this.multipleSelection[i].itemStock.itemId)
+      }
+      console.log(this.item_ids)
+      this.$axios.post('/items/buy', {
+        item_ids: this.item_ids
+      }).then()
+      this.item_ids = []
+    },
+    purchaseCheck () {
+      this.$confirm('您一共选择了' + this.multipleSelection.length + '件商品，共需支付' + this.totalPrice + '元', '再次确认！', {
+        confirmButtonText: '冲！',
+        cancelButtonText: '告辞',
+        type: 'warning'
+      }).then(() => {
+        this.purchase()
+      })
+    }
+  }
 }
 </script>
 
