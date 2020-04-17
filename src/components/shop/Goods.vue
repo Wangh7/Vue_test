@@ -15,7 +15,7 @@
           <br>
           <span>到期时间：{{item.dueTime.substring(0,10)}}</span>
           <div class="bottom clearfix">
-            <el-button type="text" class="button">查看详情</el-button>
+            <el-button type="text" class="button" @click="shopCar(item.itemId)">加入购物车</el-button>
           </div>
         </div>
       </el-card>
@@ -68,6 +68,20 @@ export default {
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
+    },
+    shopCar (itemId) {
+      console.log(itemId)
+      this.$axios.get('/items/car', {
+        params: {
+          item_id: itemId
+        }
+      }).then(resp => {
+        if (resp && resp.data.code === 200) {
+          alert('加入购物车成功')
+        } else {
+          alert(resp.data.message)
+        }
+      })
     }
   }
 

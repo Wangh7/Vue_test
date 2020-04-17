@@ -197,11 +197,11 @@ export default {
         }
       })
     },
-    showPass (pass,item_id) {
+    showPass (pass, itemId) {
       this.$axios.get('/items/pass', {
         params: {
           pass: pass,
-          item_id: item_id
+          item_id: itemId
         }
       }).then(resp => {
         alert(resp.data)
