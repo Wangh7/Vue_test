@@ -20,7 +20,7 @@
         sortable
         width="180px">
         <template slot-scope="scope">
-          <div v-if="scope.row.checkTime === 0">无</div>
+          <div v-if="scope.row.checkTime === 0">暂无</div>
           <div v-else>{{scope.row.checkTime | formatDate}}</div>
         </template>
       </el-table-column>
@@ -137,7 +137,7 @@
 <script>
 
 import SellEdit from './SellEdit'
-import {isPriceVlidator} from '../../utils/validator'
+import {isPriceVlidator, isDate} from '../../utils/validator'
 
 export default {
   name: 'Sold',
@@ -176,7 +176,8 @@ export default {
           {validator: isPriceVlidator}
         ],
         date: [
-          {required: true, message: '请选择日期', trigger: 'change'}
+          {required: true, message: '请选择日期', trigger: 'blur'},
+          {validator: isDate}
         ]
       }
     }

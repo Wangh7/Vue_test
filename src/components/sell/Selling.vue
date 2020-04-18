@@ -52,7 +52,7 @@
 <script>
 
 // 数据验证器
-import {isPriceVlidator} from '../../utils/validator'
+import {isPriceVlidator, isDate} from '../../utils/validator'
 
 export default {
   name: 'Selling',
@@ -82,7 +82,8 @@ export default {
           {validator: isPriceVlidator}
         ],
         date: [
-          {required: true, message: '请选择日期', trigger: 'change'}
+          {required: true, message: '请选择日期', trigger: 'blur'},
+          {validator: isDate}
         ]
       }
     }

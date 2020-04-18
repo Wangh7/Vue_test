@@ -39,3 +39,14 @@ export function isPhone (rule, value, callback) {
     return callback()
   }
 }
+
+// 验证日期
+export function isDate (rule, value, callback) {
+  let date = new Date()
+  date.setDate(date.getDate() + 6)
+  if (value < date) {
+    return callback(new Error('剩余到期时间太短(应至少剩余7日)'))
+  } else {
+    return callback()
+  }
+}
