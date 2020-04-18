@@ -3,13 +3,16 @@
     <el-table
       :data="items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       style="width: 1000px"
-      :default-sort="{prop:'createTime',order:'descending'}"
+      :default-sort="{prop:'finishTime',order:'descending'}"
       ref="table">
       <el-table-column
         prop="finishTime"
         label="购买日期"
         sortable
         width="160px">
+        <template slot-scope="scope">
+          <div>{{scope.row.finishTime | formatDate}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemStock.itemType.typeName"
@@ -27,6 +30,9 @@
         label="有效期"
         sortable
         width="160px">
+        <template slot-scope="scope">
+          <div>{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="price"
@@ -63,7 +69,7 @@
               :icon="timeline.icon"
               :type="timeline.type"
               size="large"
-              :timestamp="timeline.timestamp">
+              :timestamp="timeline.timestamp | formatDate">
               {{timeline.content}}
             </el-timeline-item>
           </el-timeline>
@@ -97,7 +103,7 @@
           <div>{{form.price}}</div>
         </el-form-item>
         <el-form-item label="礼品卡到期日期">
-          <div>{{form.date}}</div>
+          <div>{{form.date | formatDateNoTime}}</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -131,6 +137,32 @@ export default {
   },
   mounted () {
     this.loadItems()
+  },
+  filters: {
+    formatDate: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      let h = date.getHours()
+      h = h < 10 ? '0' + h : h
+      let m = date.getMinutes()
+      m = m < 10 ? '0' + m : m
+      let s = date.getSeconds()
+      s = s < 10 ? '0' + s : s
+      return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    },
+    formatDateNoTime: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      return y + '-' + MM + '-' + d
+    }
   },
   methods: {
     loadItems () {
@@ -177,7 +209,7 @@ export default {
           itemId: row.itemStock.itemId,
           typeName: row.itemStock.itemType.typeName,
           price: row.itemStock.price.amount,
-          date: row.itemStock.dueTime.split(' ')[0],
+          date: row.itemStock.dueTime,
           cardNum: row.itemStock.cardNum,
           cardPass: row.itemStock.cardPass
         }

@@ -13,7 +13,7 @@
           <br>
           <span>价格：{{(item.price.amount*item.itemType.typeDiscountSell).toFixed(2)}}</span>
           <br>
-          <span>到期时间：{{item.dueTime.substring(0,10)}}</span>
+          <span>到期时间：{{item.dueTime | formatDateNoTime}}</span>
           <div class="bottom clearfix">
             <el-button type="text" class="button" @click="shopCar(item.itemId)">加入购物车</el-button>
           </div>
@@ -46,6 +46,17 @@ export default {
   mounted () {
     this.loadItems()
     this.loadTypes()
+  },
+  filters: {
+    formatDateNoTime: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      return y + '-' + MM + '-' + d
+    }
   },
   methods: {
     // 利用axios发送get请求，接收到成功200代码后，把data数据替换为后端返回的数据

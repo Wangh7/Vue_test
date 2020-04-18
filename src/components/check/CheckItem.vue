@@ -7,6 +7,9 @@
         prop="createTime"
         label="发布日期"
         width="180px">
+        <template slot-scope="scope">
+          <div>{{scope.row.createTime | formatDate}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemType.typeName"
@@ -67,7 +70,7 @@
           <div>{{form.price}}</div>
         </el-form-item>
         <el-form-item label="礼品卡到期日期">
-          <div>{{form.date}}</div>
+          <div>{{form.date | formatDateNoTime}}</div>
         </el-form-item>
         <el-form-item label="新密码" prop="newPass">
           <el-input v-model="form.newPass" placeholder="请输入新卡密"></el-input>
@@ -84,17 +87,7 @@
 </template>
 
 <script>
-let cTime = function () {
-  let myDate = new Date()
-  let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
-  let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
-  let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
-  let year = myDate.getFullYear()
-  let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
-  let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
-  let str = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec
-  return str
-}
+
 export default {
   name: 'CheckItem',
   data () {
@@ -119,6 +112,32 @@ export default {
           {required: true, message: '请输入新卡密', trigger: 'blur'}
         ]
       }
+    }
+  },
+  filters: {
+    formatDate: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      let h = date.getHours()
+      h = h < 10 ? '0' + h : h
+      let m = date.getMinutes()
+      m = m < 10 ? '0' + m : m
+      let s = date.getSeconds()
+      s = s < 10 ? '0' + s : s
+      return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    },
+    formatDateNoTime: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      return y + '-' + MM + '-' + d
     }
   },
   mounted () {
@@ -146,7 +165,6 @@ export default {
               itemId: this.form.id,
               managerId: this.$store.state.user.userId,
               newPassword: this.form.newPass,
-              checkTime: cTime(),
               price: this.form.price
             }).then(resp => {
             if (resp && resp.data.code === 200) {
@@ -165,8 +183,7 @@ export default {
       this.$axios
         .post('/check/fail', {
           itemId: this.form.id,
-          managerId: this.$store.state.user.userId,
-          checkTime: cTime()
+          managerId: this.$store.state.user.userId
         }).then(resp => {
         if (resp && resp.data.code === 200) {
           alert(resp.data.message)
@@ -189,7 +206,7 @@ export default {
           status: row.status,
           type: row.itemType.typeName,
           price: row.price,
-          date: row.dueTime.split(' ')[0],
+          date: row.dueTime,
           cardNum: row.cardNum,
           cardPass: row.cardPass
         }

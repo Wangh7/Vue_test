@@ -14,6 +14,9 @@
         label="收藏日期"
         sortable
         width="180px">
+        <template slot-scope="scope">
+          <div>{{scope.row.createTime | formatDate}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemStock.itemType.typeName"
@@ -31,6 +34,9 @@
         label="有效期"
         sortable
         width="180px">
+        <template slot-scope="scope">
+          <div>{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         label="售价"
@@ -83,6 +89,32 @@ export default {
   mounted () {
     this.loadItems()
   },
+  filters: {
+    formatDate: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      let h = date.getHours()
+      h = h < 10 ? '0' + h : h
+      let m = date.getMinutes()
+      m = m < 10 ? '0' + m : m
+      let s = date.getSeconds()
+      s = s < 10 ? '0' + s : s
+      return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    },
+    formatDateNoTime: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      return y + '-' + MM + '-' + d
+    }
+  },
   methods: {
     loadItems () {
       let _this = this
@@ -113,6 +145,20 @@ export default {
         item_ids: this.item_ids
       }).then()
       this.item_ids = []
+    },
+    handleDelete (index, row, scope) {
+      scope._self.$refs[`popover-${index}`].doClose()
+      this.$axios.post('/items/buy/delete', {
+        id: row.id
+      }).then(resp => {
+        if (resp && resp.status === 200) {
+          this.loadItems()
+          alert('删除成功')
+        } else {
+          alert('删除失败')
+          return false
+        }
+      })
     },
     purchaseCheck () {
       this.$confirm('您一共选择了' + this.multipleSelection.length + '件商品，共需支付' + this.totalPrice + '元', '再次确认！', {

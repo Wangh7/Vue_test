@@ -35,7 +35,7 @@
         <el-form-item label="礼品卡到期日期" required>
           <el-form-item prop="date">
             <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
-                            style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+                            style="width: 100%;" value-format="timestamp"></el-date-picker>
           </el-form-item>
 
         </el-form-item>
@@ -54,18 +54,6 @@
 // 数据验证器
 import {isPriceVlidator} from '../../utils/validator'
 
-let cTime = function () {
-  let myDate = new Date()
-  let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
-  let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
-  let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
-  let year = myDate.getFullYear()
-  let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
-  let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
-  let str = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec
-  console.log(str)
-  return str
-}
 export default {
   name: 'Selling',
   data () {
@@ -94,7 +82,7 @@ export default {
           {validator: isPriceVlidator}
         ],
         date: [
-          {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
+          {required: true, message: '请选择日期', trigger: 'change'}
         ]
       }
     }
@@ -122,8 +110,7 @@ export default {
               price: parseFloat(this.form.price),
               cardNum: this.form.cardNum,
               cardPass: this.form.cardPass,
-              createTime: cTime(),
-              dueTime: this.form.date + ' 00:00:00',
+              dueTime: this.form.date,
               itemType: this.form.type,
               status: 'N'
             }).then(resp => {
@@ -153,6 +140,7 @@ export default {
       let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
       let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
       console.log(year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec)
+      console.log(this.form.date)
     }
   }
 }

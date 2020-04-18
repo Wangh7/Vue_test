@@ -10,12 +10,19 @@
         label="发布日期"
         sortable
         width="180px">
+        <template slot-scope="scope">
+          <div>{{scope.row.createTime | formatDate}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="checkTime"
         label="审查日期"
         sortable
         width="180px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.checkTime === 0">无</div>
+          <div v-else>{{scope.row.checkTime | formatDate}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemType.typeName"
@@ -64,7 +71,7 @@
               :icon="timeline.icon"
               :type="timeline.type"
               size="large"
-              :timestamp="timeline.timestamp">
+              :timestamp="timeline.timestamp | formatDate">
               {{timeline.content}}
             </el-timeline-item>
           </el-timeline>
@@ -113,7 +120,7 @@
         <el-form-item label="礼品卡到期日期" required>
           <el-form-item prop="date">
             <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
-                            style="width: 100%;" value-format="yyyy-MM-dd"></el-date-picker>
+                            style="width: 100%;" value-format="timestamp"></el-date-picker>
           </el-form-item>
 
         </el-form-item>
@@ -132,18 +139,6 @@
 import SellEdit from './SellEdit'
 import {isPriceVlidator} from '../../utils/validator'
 
-let cTime = function () {
-  let myDate = new Date()
-  let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
-  let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
-  let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
-  let year = myDate.getFullYear()
-  let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
-  let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
-  let str = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec
-  console.log(str)
-  return str
-}
 export default {
   name: 'Sold',
   components: SellEdit,
@@ -181,7 +176,7 @@ export default {
           {validator: isPriceVlidator}
         ],
         date: [
-          {type: 'string', required: true, message: '请选择日期', trigger: 'change'}
+          {required: true, message: '请选择日期', trigger: 'change'}
         ]
       }
     }
@@ -190,6 +185,23 @@ export default {
   mounted: function () {
     this.loadItems()
     this.loadItemsType()
+  },
+  filters: {
+    formatDate: function (value) {
+      let date = new Date(value)
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? '0' + MM : MM
+      let d = date.getDate()
+      d = d < 10 ? '0' + d : d
+      let h = date.getHours()
+      h = h < 10 ? '0' + h : h
+      let m = date.getMinutes()
+      m = m < 10 ? '0' + m : m
+      let s = date.getSeconds()
+      s = s < 10 ? '0' + s : s
+      return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    }
   },
   methods: {
     // 利用axios发送get请求，接收到成功200代码后，把data数据替换为后端返回的数据
@@ -248,8 +260,8 @@ export default {
               price: parseFloat(this.form.price),
               cardNum: this.form.cardNum,
               cardPass: this.form.cardPass,
-              createTime: cTime(),
-              dueTime: this.form.date + ' 00:00:00',
+              createTime: this.form.createTime,
+              dueTime: this.form.date,
               itemType: this.form.type,
               status: 'N'
             }).then(resp => {
@@ -279,7 +291,7 @@ export default {
           status: row.status,
           type: row.itemType,
           price: row.price,
-          date: row.dueTime.split(' ')[0],
+          date: row.dueTime,
           cardNum: row.cardNum,
           cardPass: ''
         }
