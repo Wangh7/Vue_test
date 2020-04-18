@@ -7,7 +7,9 @@
       @selection-change="handleSelectionChange"
       ref="table">
       <el-table-column
-        type="selection">
+        type="selection"
+        :selectable="checkSelectable"
+      >
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -15,7 +17,8 @@
         sortable
         width="180px">
         <template slot-scope="scope">
-          <div>{{scope.row.createTime | formatDate}}</div>
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.createTime | formatDate}}</div>
+          <div v-else style="text-decoration:line-through">{{scope.row.createTime | formatDate}}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -23,11 +26,19 @@
         label="卡片种类"
         sortable
         width="140px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.itemType.typeName}}</div>
+          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.itemType.typeName}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemStock.price.amount"
         label="面额"
         width="140px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.price.amount}}</div>
+          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.price.amount}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemStock.dueTime"
@@ -35,14 +46,23 @@
         sortable
         width="180px">
         <template slot-scope="scope">
-          <div>{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
         </template>
       </el-table-column>
       <el-table-column
         label="售价"
         width="180px">
         <template slot-scope="scope">
-          <div>{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
+          <el-row>
+            <el-col :span="12">
+              <div v-if="scope.row.itemStock.status !== 'Y'">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
+              <div v-else style="text-decoration:line-through">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
+            </el-col>
+            <el-col :span="12">
+              <div v-if="scope.row.itemStock.status === 'Y'" style="color: red;">(已失效)</div>
+            </el-col>
+          </el-row>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -116,6 +136,13 @@ export default {
     }
   },
   methods: {
+    checkSelectable (row) {
+      if (row.itemStock.status === 'Y') {
+        return false
+      } else {
+        return true
+      }
+    },
     loadItems () {
       let _this = this
       this.$axios.get('/items/buy').then(resp => {
@@ -140,10 +167,16 @@ export default {
         console.log(i)
         this.item_ids.push(this.multipleSelection[i].itemStock.itemId)
       }
-      console.log(this.item_ids)
       this.$axios.post('/items/buy', {
         item_ids: this.item_ids
-      }).then()
+      }).then(resp => {
+        if (resp && resp.data.code === 200) {
+          alert('购买成功')
+        } else {
+          alert(resp.data.message)
+        }
+        this.loadItems()
+      })
       this.item_ids = []
     },
     handleDelete (index, row, scope) {
