@@ -24,18 +24,20 @@
         </el-form-item>
         <el-form-item label="礼品卡余额" prop="price">
           <el-row>
-            <el-col :span="14">
+            <el-col :span="10">
               <el-input v-model="form.price" placeholder="请输入余额"></el-input>
             </el-col>
-            <el-col :span="10">
-              <div v-if="form.type && form.price">(预计收入：{{(form.price*form.type.typeDiscountBuy).toFixed(2)}}元)</div>
+            <el-col :span="14">
+              <div v-if="form.type && form.price">(预计收入：{{form.price}}*{{form.type.typeDiscountBuy}}*{{timeDiscount.discount}}={{(form.price*form.type.typeDiscountBuy*timeDiscount.discount).toFixed(2)}}元)</div>
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="礼品卡到期日期" required>
           <el-form-item prop="date">
             <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
-                            style="width: 100%;" value-format="timestamp"></el-date-picker>
+                            style="width: 100%;" value-format="timestamp" @change="diffDate(form.date)">
+            </el-date-picker>
+            <div v-if="timeDiscount.discount !== 1">所选到期时间在{{timeDiscount.name}}对应折扣为{{timeDiscount.discount}}</div>
           </el-form-item>
 
         </el-form-item>
@@ -59,6 +61,7 @@ export default {
   data () {
     return {
       types: [],
+      discounts: [],
       form: {
         name: '',
         type: '',
@@ -66,6 +69,10 @@ export default {
         date: '',
         cardNum: '',
         cardPass: ''
+      },
+      timeDiscount: {
+        name: '',
+        discount: 1
       },
       rules: {
         cardNum: [
@@ -91,6 +98,7 @@ export default {
   // 钩子函数
   mounted: function () {
     this.loadItemsType()
+    this.loadDiscounts()
   },
   methods: {
     loadItemsType () {
@@ -100,6 +108,28 @@ export default {
           _this.types = resp.data
         }
       })
+    },
+    loadDiscounts () {
+      let _this = this
+      this.$axios.get('/items/discount/time').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.discounts = resp.data
+        }
+      })
+    },
+    diffDate (date) {
+      let day = Math.ceil((date - new Date()) / 86400000)
+      if (day <= 0) {
+        return
+      }
+      for (let i = 0; i < this.discounts.length; i++) {
+        if (day < this.discounts[i].timeLeftday) {
+          this.timeDiscount.discount = this.discounts[i].discountBuy
+          this.timeDiscount.name = this.discounts[i].timeName
+          return
+        }
+      }
+      this.timeDiscount.discount = 1
     },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
