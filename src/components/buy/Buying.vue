@@ -27,17 +27,13 @@
         sortable
         width="140px">
         <template slot-scope="scope">
-          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.itemType.typeName}}</div>
-          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.itemType.typeName}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="itemStock.price.amount"
-        label="面额"
-        width="140px">
-        <template slot-scope="scope">
-          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.price.amount}}</div>
-          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.price.amount}}</div>
+          <el-col :span="12">
+            <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.itemType.typeName}}</div>
+            <div v-else style="text-decoration:line-through">{{scope.row.itemStock.itemType.typeName}}</div>
+          </el-col>
+          <el-col :span="12">
+            <div style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-scope.row.itemStock.itemType.typeDiscountSell*100}}%</div>
+          </el-col>
         </template>
       </el-table-column>
       <el-table-column
@@ -46,18 +42,33 @@
         sortable
         width="180px">
         <template slot-scope="scope">
-          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
-          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+          <el-col :span="12">
+            <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+            <div v-else style="text-decoration:line-through">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
+          </el-col>
+          <el-col :span="12">
+            <div style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-diffDate(scope.row.itemStock.dueTime)*100}}%</div>
+          </el-col>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="itemStock.price.amount"
+        label="面额"
+        width="140px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.price.amount}} *{{scope.row.itemStock.itemType.typeDiscountSell}}*{{diffDate(scope.row.itemStock.dueTime)}}=</div>
+          <div v-else style="text-decoration:line-through">{{scope.row.itemStock.price.amount}}</div>
+        </template>
+      </el-table-column>
+
       <el-table-column
         label="售价"
         width="180px">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="12">
-              <div v-if="scope.row.itemStock.status !== 'Y'">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
-              <div v-else style="text-decoration:line-through">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell).toFixed(2)}}</div>
+              <div v-if="scope.row.itemStock.status !== 'Y'">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}</div>
+              <div v-else style="text-decoration:line-through">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}</div>
             </el-col>
             <el-col :span="12">
               <div v-if="scope.row.itemStock.status === 'Y'" style="color: red;">(已失效)</div>
@@ -101,6 +112,7 @@ export default {
   data () {
     return {
       items: [],
+      discounts: [],
       multipleSelection: [],
       totalPrice: 0,
       item_ids: []
@@ -108,6 +120,7 @@ export default {
   },
   mounted () {
     this.loadItems()
+    this.loadDiscounts()
   },
   filters: {
     formatDate: function (value) {
@@ -151,10 +164,30 @@ export default {
         }
       })
     },
+    loadDiscounts () {
+      let _this = this
+      this.$axios.get('/items/discount/time').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.discounts = resp.data
+        }
+      })
+    },
+    diffDate (date) {
+      let day = Math.floor((date - new Date()) / 86400000)
+      if (day <= 0) {
+        return 0
+      }
+      for (let i = 0; i < this.discounts.length; i++) {
+        if (day < this.discounts[i].timeLeftday) {
+          return this.discounts[i].discountSell
+        }
+      }
+      return 1
+    },
     priceSum () {
       this.totalPrice = 0
       for (let i = 0; i < this.multipleSelection.length; i++) {
-        this.totalPrice += Number((this.multipleSelection[i].itemStock.price.amount * this.multipleSelection[i].itemStock.itemType.typeDiscountSell).toFixed(2))
+        this.totalPrice += Number((this.multipleSelection[i].itemStock.price.amount * this.multipleSelection[i].itemStock.itemType.typeDiscountSell * this.diffDate(this.multipleSelection[i].itemStock.dueTime)).toFixed(2))
       }
       this.totalPrice = this.totalPrice.toFixed(2)
     },

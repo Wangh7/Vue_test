@@ -37,7 +37,9 @@
             <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
                             style="width: 100%;" value-format="timestamp" @change="diffDate(form.date)">
             </el-date-picker>
-            <div v-if="timeDiscount.discount !== 1">所选到期时间在{{timeDiscount.name}}对应折扣为{{timeDiscount.discount}}</div>
+            <div v-if="timeDiscount.discount !== 1 && timeDiscount.discount!== 0">
+              所选到期时间在{{timeDiscount.name}}对应折扣为{{timeDiscount.discount}}
+            </div>
           </el-form-item>
 
         </el-form-item>
@@ -68,7 +70,9 @@ export default {
         price: '',
         date: '',
         cardNum: '',
-        cardPass: ''
+        cardPass: '',
+        discountItem: '',
+        discountTime: ''
       },
       timeDiscount: {
         name: '',
@@ -118,8 +122,9 @@ export default {
       })
     },
     diffDate (date) {
-      let day = Math.ceil((date - new Date()) / 86400000)
+      let day = Math.floor((date - new Date()) / 86400000)
       if (day <= 0) {
+        this.timeDiscount.discount = 0
         return
       }
       for (let i = 0; i < this.discounts.length; i++) {
@@ -143,7 +148,9 @@ export default {
               cardPass: this.form.cardPass,
               dueTime: this.form.date,
               itemType: this.form.type,
-              status: 'N'
+              status: 'N',
+              discountItem: this.form.type.typeDiscountBuy,
+              discountTime: this.timeDiscount.discount
             }).then(resp => {
             if (resp && resp.data.code === 200) {
               alert(resp.data.message)
@@ -161,6 +168,7 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+      this.timeDiscount.discount = 0
     },
     test () {
       let myDate = new Date()
