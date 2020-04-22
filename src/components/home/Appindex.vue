@@ -53,7 +53,7 @@
               <img style="width: 30%;float: left" :src="'/static/hot/new.png'">
               <div style="font-size: 30px;text-align: center;margin-top: 5px;">{{item.typeName}}</div>
               <div style="text-align: right;margin-top: 20px">
-                <el-link :underline="false" style="font-size: 16px">立即购买</el-link>
+                <el-link :underline="false" style="font-size: 16px" @click="shop">立即购买</el-link>
               </div>
 
             </el-card>
@@ -111,6 +111,9 @@ export default {
     this.loadDiscountList()
   },
   methods: {
+    shop () {
+      this.$router.replace('/shop')
+    },
     loadDiscountList () {
       this.$axios.get('/items/discount/ads').then(resp => {
         if (resp && resp.status === 200) {
