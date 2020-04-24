@@ -11,10 +11,36 @@
         <div>{{form.price}}</div>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click="moneyIn()">充值</el-button>
-        <el-button type="warning" @click="moneyOut()">提现</el-button>
+        <el-button type="success" @click="moneyInVisible = true">充值</el-button>
+        <el-button type="warning" @click="moneyOutVisible = true">提现</el-button>
       </el-form-item>
     </el-form>
+
+    <el-dialog title="充值" :visible.sync="moneyInVisible">
+      <div>
+        <el-radio v-model="radio" label="10" border>¥10</el-radio>
+        <el-radio v-model="radio" label="20" border>¥20</el-radio>
+        <el-radio v-model="radio" label="50" border>¥50</el-radio>
+        <el-radio v-model="radio" label="100" border>¥100</el-radio>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="moneyInVisible = false">取消</el-button>
+        <el-button type="primary" @click="moneyIn(radio)">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="提现" :visible.sync="moneyOutVisible">
+      <div>
+        <el-radio v-model="radio" label="10" border>¥10</el-radio>
+        <el-radio v-model="radio" label="20" border>¥20</el-radio>
+        <el-radio v-model="radio" label="50" border>¥50</el-radio>
+        <el-radio v-model="radio" label="100" border>¥100</el-radio>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="moneyOutVisible = false">取消</el-button>
+        <el-button type="primary" @click="moneyOut(radio)">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -23,10 +49,12 @@ export default {
   name: 'Price',
   data () {
     return {
-      dialogFormVisible: false,
+      moneyInVisible: false,
+      moneyOutVisible: false,
       form: {
         price: ''
-      }
+      },
+      radio: ''
     }
   },
   mounted () {
@@ -44,19 +72,29 @@ export default {
           }
         })
     },
-    moneyIn () {
+    moneyIn (money) {
       this.$axios.post('/user/single/price', {
-        money: 10.23,
+        money: money,
         status: '+'
-      }).then()
-      this.loadPrice()
+      }).then(resp => {
+        if (resp && resp.status === 200) {
+          alert('充值成功')
+        }
+      })
+      this.moneyInVisible = false
+      setTimeout(this.loadPrice, 1000)
     },
-    moneyOut () {
+    moneyOut (money) {
       this.$axios.post('/user/single/price', {
-        money: 1.44,
+        money: money,
         status: '-'
-      }).then()
-      this.loadPrice()
+      }).then(resp => {
+        if (resp && resp.status === 200) {
+          alert('提现成功')
+        }
+      })
+      this.moneyOutVisible = false
+      setTimeout(this.loadPrice, 1000)
     }
   }
 }

@@ -94,7 +94,7 @@
       </el-table-column>
     </el-table>
     <br>
-    <el-row>
+    <el-row style="width: 1000px">
       <el-col :span="18">
         <div style="float: right;">共选择{{multipleSelection.length}}件，总计{{totalPrice}}元</div>
       </el-col>

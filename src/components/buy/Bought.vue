@@ -78,6 +78,7 @@
     </el-table>
     <el-pagination
       @current-change="handleCurrentChange"
+      style="width: 1000px"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="items.length">

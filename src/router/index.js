@@ -41,27 +41,42 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        title: '登录'
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: Register
+      component: Register,
+      meta: {
+        title: '注册'
+      }
     },
     {
       path: '/error/404',
       name: 'NotFound',
-      component: NotFound
+      component: NotFound,
+      meta: {
+        title: '404'
+      }
     },
     {
       path: '/error/403',
       name: 'Forbidden',
-      component: Forbidden
+      component: Forbidden,
+      meta: {
+        title: '403'
+      }
     },
     {
       path: '/error/401',
       name: 'UnAuthorized',
-      component: UnAuthorized
+      component: UnAuthorized,
+      meta: {
+        title: '401'
+      }
     },
     {
       path: '/home',
@@ -80,6 +95,7 @@ export default new Router({
               name: 'IndexCheck',
               component: IndexCheck,
               meta: {
+                title: '商品审核',
                 requireAuth: true
               }
             },
@@ -88,6 +104,7 @@ export default new Router({
               name: 'CheckItem',
               component: CheckItem,
               meta: {
+                title: '待审核',
                 requireAuth: true
               }
             },
@@ -96,6 +113,7 @@ export default new Router({
               name: 'CheckedItem',
               component: CheckedItem,
               meta: {
+                title: '已审核',
                 requireAuth: true
               }
             }
@@ -112,6 +130,7 @@ export default new Router({
               name: 'IndexDiscount',
               component: IndexDiscount,
               meta: {
+                title: '折扣设置',
                 requireAuth: true
               }
             },
@@ -120,6 +139,7 @@ export default new Router({
               name: 'ItemDiscount',
               component: ItemDiscount,
               meta: {
+                title: '商品折扣',
                 requireAuth: true
               }
             },
@@ -128,6 +148,7 @@ export default new Router({
               name: 'TimeDiscount',
               component: TimeDiscount,
               meta: {
+                title: '时间折扣',
                 requireAuth: true
               }
             }
@@ -138,6 +159,7 @@ export default new Router({
           name: 'AppIndex',
           component: AppIndex,
           meta: {
+            title: '首页',
             requireAuth: true
           }
         },
@@ -152,6 +174,7 @@ export default new Router({
               name: 'Profile',
               component: Profile,
               meta: {
+                title: '个人中心',
                 requireAuth: true
               }
             },
@@ -160,6 +183,7 @@ export default new Router({
               name: 'Pass',
               component: Pass,
               meta: {
+                title: '修改密码',
                 requireAuth: true
               }
             },
@@ -168,6 +192,7 @@ export default new Router({
               name: 'Price',
               component: Price,
               meta: {
+                title: '账户余额',
                 requireAuth: true
               }
             }
@@ -178,6 +203,7 @@ export default new Router({
           name: 'Shop',
           component: Shop,
           meta: {
+            title: '商品大厅',
             requireAuth: true
           }
         },
@@ -192,6 +218,7 @@ export default new Router({
               name: 'IndexBuy',
               component: IndexBuy,
               meta: {
+                title: '我要购买',
                 requireAuth: true
               }
             },
@@ -200,6 +227,7 @@ export default new Router({
               name: 'Buying',
               component: Buying,
               meta: {
+                title: '立即结算',
                 requireAuth: true
               }
             },
@@ -208,6 +236,7 @@ export default new Router({
               name: 'Bought',
               component: Bought,
               meta: {
+                title: '我已购买',
                 requireAuth: true
               }
             }
@@ -224,6 +253,7 @@ export default new Router({
               name: 'IndexSell',
               component: IndexSell,
               meta: {
+                title: '我要出售',
                 requireAuth: true
               }
             },
@@ -232,6 +262,7 @@ export default new Router({
               name: 'Selling',
               component: Selling,
               meta: {
+                title: '立即发布',
                 requireAuth: true
               }
             },
@@ -240,6 +271,7 @@ export default new Router({
               name: 'Sold',
               component: Sold,
               meta: {
+                title: '我已售出',
                 requireAuth: true
               }
             }
@@ -256,6 +288,7 @@ export default new Router({
               name: 'IndexAdmin',
               component: IndexAdmin,
               meta: {
+                title: '用户管理',
                 requireAuth: true
               }
             },
@@ -264,6 +297,7 @@ export default new Router({
               name: 'UserManager',
               component: UserManager,
               meta: {
+                title: '用户管理',
                 requireAuth: true
               }
             },
@@ -272,6 +306,7 @@ export default new Router({
               name: 'RoleManager',
               component: RoleManager,
               meta: {
+                title: '角色管理',
                 requireAuth: true
               }
             }

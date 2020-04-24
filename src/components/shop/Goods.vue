@@ -1,6 +1,7 @@
 <template>
   <div>
-    <el-row style="height: 1000px">
+    <el-row style="width: 880px">
+      <div v-if="items.length === 0" style="font-size: 24px">Sorry，暂无数据</div>
       <el-card
         v-for="item in items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         :key="item.id"
@@ -20,8 +21,9 @@
         </div>
       </el-card>
     </el-row>
-    <el-row>
+    <el-row style="width: 880px">
       <el-pagination
+        v-if="items.length !==0"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-size="pageSize"
@@ -39,7 +41,7 @@ export default {
       items: [],
       types: [],
       currentPage: 1,
-      pageSize: 8
+      pageSize: 16
     }
   },
   // 钩子函数

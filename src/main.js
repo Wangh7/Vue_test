@@ -32,6 +32,9 @@ Vue.use(ElementUI)
 }) */
 
 router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
   if (to.matched.length === 0) {
     next({
       path: '/error/404'
