@@ -56,7 +56,7 @@
 <script>
 
 // 数据验证器
-import {isPriceVlidator, isDate} from '../../utils/validator'
+import {isPriceVlidator, isDate, isCardNum} from '../../utils/validator'
 
 export default {
   name: 'Selling',
@@ -80,7 +80,8 @@ export default {
       },
       rules: {
         cardNum: [
-          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'}
+          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'},
+          {validator: isCardNum, trigger: 'blur'}
         ],
         cardPass: [
           {required: true, message: '请输入礼品卡卡密', trigger: 'blur'}

@@ -50,3 +50,13 @@ export function isDate (rule, value, callback) {
     return callback()
   }
 }
+
+// 验证卡号
+export function isCardNum (rule, value, callback) {
+  const pattern = /^([0-9a-zA-Z]){8,32}$/
+  if (!pattern.test(value)) {
+    return callback(new Error('卡号应由8-32位数字或字母组成'))
+  } else {
+    return callback()
+  }
+}

@@ -64,7 +64,7 @@
           <div>{{form.cardNum}}</div>
         </el-form-item>
         <el-form-item label="礼品卡密码">
-          <el-button type="primary" @click="showPass(form.cardPass)">显示</el-button>
+          <el-button type="primary" @click="showPass(form.id,form.cardPass)">显示</el-button>
         </el-form-item>
         <el-form-item label="礼品卡余额">
           <div>{{form.price}}</div>
@@ -73,12 +73,11 @@
           <div>{{form.date | formatDateNoTime}}</div>
         </el-form-item>
         <el-form-item label="新密码" prop="newPass">
-          <el-input v-model="form.newPass" placeholder="请输入新卡密"></el-input>
+          <el-button type="warning" @click="getPass">获取</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="warning" @click="resetForm('form')">重置</el-button>
         <el-button type="danger" @click="checkFail()">打回</el-button>
         <el-button type="success" @click="checkSuccess('form')">通过</el-button>
       </div>
@@ -106,11 +105,6 @@ export default {
         cardPass: '',
         dueTime: '',
         createTime: ''
-      },
-      rules: {
-        newPass: [
-          {required: true, message: '请输入新卡密', trigger: 'blur'}
-        ]
       }
     }
   },
@@ -212,17 +206,30 @@ export default {
         }
       })
     },
-    showPass (pass) {
-      this.$axios.get('/check/pass', {
+    showPass (itemId, pass) {
+      this.$axios.get('/check/oldPass', {
         params: {
+          itemId: itemId,
           pass: pass
         }
       }).then(resp => {
         alert(resp.data)
       })
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    getPass () {
+      this.$axios.get('/check/newPass').then(resp => {
+        this.form.newPass = resp.data
+        this.copyToClip(resp.data)
+      })
+    },
+    copyToClip (content) {
+      let aux = document.createElement('input')
+      aux.setAttribute('value', content)
+      document.body.appendChild(aux)
+      aux.select()
+      document.execCommand('copy')
+      document.body.removeChild(aux)
+      alert('复制成功')
     }
   }
 }

@@ -143,7 +143,7 @@
 <script>
 
 import SellEdit from './SellEdit'
-import {isPriceVlidator, isDate} from '../../utils/validator'
+import {isPriceVlidator, isDate, isCardNum} from '../../utils/validator'
 
 export default {
   name: 'Sold',
@@ -175,7 +175,8 @@ export default {
       },
       rules: {
         cardNum: [
-          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'}
+          {required: true, message: '请输入礼品卡卡号', trigger: 'blur'},
+          {validator: isCardNum, trigger: 'blur'}
         ],
         cardPass: [
           {required: true, message: '请输入礼品卡卡密', trigger: 'blur'}
