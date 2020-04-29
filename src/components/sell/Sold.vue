@@ -28,6 +28,16 @@
         prop="itemType.typeName"
         label="卡片种类"
         width="180px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.entity === true">
+            <span>{{scope.row.itemType.typeName}}</span>
+            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+          </div>
+          <div v-if="scope.row.entity === false">
+            <span>{{scope.row.itemType.typeName}}</span>
+            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="status"
@@ -38,6 +48,12 @@
           <div v-if="scope.row.status === 'N'">等待审核</div>
           <div v-if="scope.row.status === 'F'">审核未通过</div>
           <div v-if="scope.row.status === 'T'">审核通过</div>
+          <div v-if="scope.row.status === 'N1'">等待购买</div>
+          <div v-if="scope.row.status === 'N2'">等待发货</div>
+          <div v-if="scope.row.status === 'N3'">已发货</div>
+          <div v-if="scope.row.status === 'N4'">已收货，等待审核</div>
+          <div v-if="scope.row.status === 'F1'">审核未通过，等待退回</div>
+          <div v-if="scope.row.status === 'F2'">已退回</div>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -46,7 +62,7 @@
           <el-button
             size="mini"
             :disabled="scope.row.status !== 'N'"
-            @click="handleEdit(scope.$index, scope.row, scope)">编辑
+            @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-popover
             placement="top"
@@ -102,10 +118,10 @@
                        :value="type"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="礼品卡卡号" prop="cardNum">
+        <el-form-item v-if="form.entity === false" label="礼品卡卡号" prop="cardNum">
           <el-input v-model="form.cardNum" placeholder="请输入卡号"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡密码" prop="cardPass">
+        <el-form-item v-if="form.entity === false" label="礼品卡密码" prop="cardPass">
           <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
         <el-form-item label="礼品卡余额" prop="price">
@@ -168,7 +184,8 @@ export default {
         cardPass: '',
         createTime: '',
         discountItem: '',
-        discountTime: ''
+        discountTime: '',
+        entity: ''
       },
       timeDiscount: {
         name: '',
@@ -302,7 +319,10 @@ export default {
               createTime: this.form.createTime,
               dueTime: this.form.date,
               itemType: this.form.type,
-              status: 'N'
+              status: 'N',
+              entity: this.form.entity,
+              discountItem: this.form.type.typeDiscountBuy,
+              discountTime: this.timeDiscount.discount
             }).then(resp => {
             if (resp && resp.data.code === 200) {
               alert(resp.data.message)
@@ -321,7 +341,7 @@ export default {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
-    handleEdit (index, row, scope) {
+    handleEdit (index, row) {
       this.dialogFormVisible = true
       this.$nextTick(function () {
         this.form = {
@@ -332,7 +352,8 @@ export default {
           price: row.price,
           date: row.dueTime,
           cardNum: row.cardNum,
-          cardPass: ''
+          cardPass: '',
+          entity: row.entity
         }
         this.diffDate(this.form.date)
       })

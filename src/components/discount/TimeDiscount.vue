@@ -24,7 +24,7 @@
         width="160px">
       </el-table-column>
       <el-table-column
-        label="启用状态"
+        label="促销信息"
         width="80px">
         <template slot-scope="scope">
           <el-switch
@@ -71,9 +71,6 @@
         <el-form-item label="名称">
           <div>{{form.name}}</div>
         </el-form-item>
-        <el-form-item label="代码">
-          <div>{{form.code}}</div>
-        </el-form-item>
         <el-form-item label="收购折扣">
           <el-input-number v-model="form.discountBuy" :precision="2" :step="0.01" :max="0.99"
                            :min="0.01"></el-input-number>
@@ -104,7 +101,6 @@ export default {
       form: {
         id: '',
         name: '',
-        code: '',
         discountBuy: '',
         discountSell: ''
       }
@@ -156,11 +152,10 @@ export default {
       this.dialogFormVisible = true
       this.$nextTick(function () {
         this.form = {
-          id: row.typeId,
-          name: row.typeName,
-          code: row.typeCode,
-          discountBuy: row.typeDiscountBuy,
-          discountSell: row.typeDiscountSell
+          id: row.id,
+          name: row.timeName,
+          discountBuy: row.discountBuy,
+          discountSell: row.discountSell
         }
       })
     },

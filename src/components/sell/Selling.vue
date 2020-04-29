@@ -9,6 +9,10 @@
         class="demo-ruleForm"
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
+        <el-form-item label="礼品卡形式" prop="radio">
+          <el-radio v-model="form.entity" label="false" border @change="resetForm('form')">电子卡</el-radio>
+          <el-radio v-model="form.entity" label="true" border @change="resetForm('form')">实体卡</el-radio>
+        </el-form-item>
         <el-form-item label="礼品卡种类" prop="type">
           <el-select v-model="form.type" value-key="typeId" placeholder="请选择种类">
             <el-option v-for="(type,i) in types" :key="i"
@@ -16,10 +20,10 @@
                        :value="type"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="礼品卡卡号" prop="cardNum">
+        <el-form-item v-if="form.entity === 'false'" label="礼品卡卡号" prop="cardNum">
           <el-input v-model="form.cardNum" placeholder="请输入卡号"></el-input>
         </el-form-item>
-        <el-form-item label="礼品卡密码" prop="cardPass">
+        <el-form-item v-if="form.entity === 'false'" label="礼品卡密码" prop="cardPass">
           <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
         <el-form-item label="礼品卡余额" prop="price">
@@ -72,7 +76,8 @@ export default {
         cardNum: '',
         cardPass: '',
         discountItem: '',
-        discountTime: ''
+        discountTime: '',
+        entity: 'false'
       },
       timeDiscount: {
         name: '',
@@ -151,7 +156,8 @@ export default {
               itemType: this.form.type,
               status: 'N',
               discountItem: this.form.type.typeDiscountBuy,
-              discountTime: this.timeDiscount.discount
+              discountTime: this.timeDiscount.discount,
+              entity: this.form.entity
             }).then(resp => {
             if (resp && resp.data.code === 200) {
               alert(resp.data.message)

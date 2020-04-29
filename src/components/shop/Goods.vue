@@ -8,7 +8,13 @@
         style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px;float: left"
         body-style="padding: 0px"
         shadow="hover">
-        <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
+        <div style="position: relative;">
+          <div style="position: absolute; left: 155px;">
+            <img v-if="item.entity === false" :src="'/static/electric.png'">
+            <img v-if="item.entity === true" :src="'/static/entity.png'">
+          </div>
+          <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
+        </div>
         <div style="padding: 14px;">
           <span>面额：{{item.price.amount}}</span>
           <br>

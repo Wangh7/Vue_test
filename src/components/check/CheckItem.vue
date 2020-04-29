@@ -15,6 +15,16 @@
         prop="itemType.typeName"
         label="卡片种类"
         width="180px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.entity === true">
+            <span>{{scope.row.itemType.typeName}}</span>
+            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+          </div>
+          <div v-if="scope.row.entity === false">
+            <span>{{scope.row.itemType.typeName}}</span>
+            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="price"
@@ -60,10 +70,10 @@
         <el-form-item label="礼品卡种类">
           <div>{{form.type}}</div>
         </el-form-item>
-        <el-form-item label="礼品卡卡号">
+        <el-form-item v-if="form.entity === false" label="礼品卡卡号">
           <div>{{form.cardNum}}</div>
         </el-form-item>
-        <el-form-item label="礼品卡密码">
+        <el-form-item v-if="form.entity === false" label="礼品卡密码">
           <el-button type="primary" @click="showPass(form.id,form.cardPass)">显示</el-button>
         </el-form-item>
         <el-form-item label="礼品卡余额">
@@ -72,7 +82,7 @@
         <el-form-item label="礼品卡到期日期">
           <div>{{form.date | formatDateNoTime}}</div>
         </el-form-item>
-        <el-form-item label="新密码" prop="newPass">
+        <el-form-item v-if="form.entity === false" label="新密码" prop="newPass">
           <el-button type="warning" @click="getPass">获取</el-button>
         </el-form-item>
       </el-form>
@@ -104,7 +114,8 @@ export default {
         cardNum: '',
         cardPass: '',
         dueTime: '',
-        createTime: ''
+        createTime: '',
+        entity: ''
       }
     }
   },
@@ -202,7 +213,8 @@ export default {
           price: row.price,
           date: row.dueTime,
           cardNum: row.cardNum,
-          cardPass: row.cardPass
+          cardPass: row.cardPass,
+          entity: row.entity
         }
       })
     },

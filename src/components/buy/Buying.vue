@@ -25,14 +25,18 @@
         prop="itemStock.itemType.typeName"
         label="卡片种类"
         sortable
-        width="140px">
+        width="200px">
         <template slot-scope="scope">
           <el-col :span="12">
             <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.itemType.typeName}}</div>
             <div v-else style="text-decoration:line-through">{{scope.row.itemStock.itemType.typeName}}</div>
           </el-col>
           <el-col :span="12">
-            <div style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-scope.row.itemStock.itemType.typeDiscountSell*100}}%</div>
+            <span style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-scope.row.itemStock.itemType.typeDiscountSell*100}}%</span>
+            <span v-if="scope.row.itemStock.entity === true"
+                  style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+            <span v-if="scope.row.itemStock.entity === false"
+                  style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
           </el-col>
         </template>
       </el-table-column>
@@ -47,7 +51,9 @@
             <div v-else style="text-decoration:line-through">{{scope.row.itemStock.dueTime | formatDateNoTime}}</div>
           </el-col>
           <el-col :span="12">
-            <div style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-diffDate(scope.row.itemStock.dueTime)*100}}%</div>
+            <div style="color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">
+              -{{100-diffDate(scope.row.itemStock.dueTime)*100}}%
+            </div>
           </el-col>
         </template>
       </el-table-column>
@@ -56,19 +62,25 @@
         label="面额"
         width="140px">
         <template slot-scope="scope">
-          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.price.amount}} *{{scope.row.itemStock.itemType.typeDiscountSell}}*{{diffDate(scope.row.itemStock.dueTime)}}=</div>
+          <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.itemStock.price.amount}}
+            *{{scope.row.itemStock.itemType.typeDiscountSell}}*{{diffDate(scope.row.itemStock.dueTime)}}=
+          </div>
           <div v-else style="text-decoration:line-through">{{scope.row.itemStock.price.amount}}</div>
         </template>
       </el-table-column>
 
       <el-table-column
         label="售价"
-        width="180px">
+        width="140px">
         <template slot-scope="scope">
           <el-row>
             <el-col :span="12">
-              <div v-if="scope.row.itemStock.status !== 'Y'">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}</div>
-              <div v-else style="text-decoration:line-through">{{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}</div>
+              <div v-if="scope.row.itemStock.status !== 'Y'">
+                {{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}
+              </div>
+              <div v-else style="text-decoration:line-through">
+                {{(scope.row.itemStock.price.amount*scope.row.itemStock.itemType.typeDiscountSell*diffDate(scope.row.itemStock.dueTime)).toFixed(2)}}
+              </div>
             </el-col>
             <el-col :span="12">
               <div v-if="scope.row.itemStock.status === 'Y'" style="color: red;">(已失效)</div>
