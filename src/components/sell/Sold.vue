@@ -60,9 +60,15 @@
         <template slot-scope="scope">
           <el-button type="text" @click="toggleExpand(scope.row)">查看进度</el-button>
           <el-button
+            v-if="scope.row.status !== 'N2'"
             size="mini"
             :disabled="scope.row.status !== 'N'"
             @click="handleEdit(scope.$index, scope.row)">编辑
+          </el-button>
+          <el-button
+            v-if="scope.row.status === 'N2'"
+            size="mini"
+            @click="handleSell(scope.$index, scope.row)">发货
           </el-button>
           <el-popover
             placement="top"
@@ -102,7 +108,7 @@
       :total="items.length">
     </el-pagination>
 
-    <el-dialog title="修改商品信息" :visible.sync="dialogFormVisible">
+    <el-dialog title="修改商品信息" :visible.sync="dialogEditVisible">
       <el-form
         :model="form"
         :rules="rules"
@@ -150,8 +156,28 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="warning" @click="resetForm('form')">重置</el-button>
-        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button @click="dialogEditVisible = false">取消</el-button>
         <el-button type="primary" @click="submitForm('form')">修改</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="向平台发货" :visible.sync="dialogSellVisible">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form2"
+        label-width="150px"
+        class="demo-ruleForm"
+        style="text-align: left">
+        <!-- prop和v-model的名称需要一致 -->
+        <el-form-item label="快递单号" prop="expressNum">
+          <el-input v-model="form.expressNum" placeholder="请输入快递单号"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="resetForm('form2')">重置</el-button>
+        <el-button @click="dialogSellVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitForm2('form2')">发货</el-button>
       </div>
     </el-dialog>
   </div>
@@ -174,7 +200,8 @@ export default {
       pageSize: 10,
       popVisible: false,
       loading: true,
-      dialogFormVisible: false,
+      dialogEditVisible: false,
+      dialogSellVisible: false,
       form: {
         id: '',
         type: '',
@@ -185,13 +212,17 @@ export default {
         createTime: '',
         discountItem: '',
         discountTime: '',
-        entity: ''
+        entity: '',
+        expressNum: ''
       },
       timeDiscount: {
         name: '',
         discount: 1
       },
       rules: {
+        expressNum: [
+          {required: true, message: '请输入快递单号', trigger: 'blur'}
+        ],
         cardNum: [
           {required: true, message: '请输入礼品卡卡号', trigger: 'blur'},
           {validator: isCardNum, trigger: 'blur'}
@@ -307,7 +338,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogFormVisible = false
+          this.dialogEditVisible = false
           this.$axios
             .post('/items/sell', {
               userId: this.$store.state.user.userId,
@@ -338,11 +369,40 @@ export default {
         }
       })
     },
+    submitForm2 (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$confirm('您所填写的快递单号为 ' + this.form.expressNum + ' 一经确认不可修改！', '再次确认！', {
+            confirmButtonText: '奥利给',
+            cancelButtonText: '手残了',
+            type: 'warning'
+          }).then(() => {
+            this.dialogSellVisible = false
+            this.$axios
+              .post('/items/sell/entity', {
+                itemId: this.form.id,
+                cardNum: this.form.expressNum
+              }).then(resp => {
+              if (resp && resp.data.code === 200) {
+                alert(resp.data.message)
+                this.loadItems()
+              } else {
+                alert(resp.data.message)
+                return false
+              }
+            })
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
     handleEdit (index, row) {
-      this.dialogFormVisible = true
+      this.dialogEditVisible = true
       this.$nextTick(function () {
         this.form = {
           id: row.itemId,
@@ -356,6 +416,15 @@ export default {
           entity: row.entity
         }
         this.diffDate(this.form.date)
+      })
+    },
+    handleSell (index, row) {
+      this.dialogSellVisible = true
+      this.$nextTick(function () {
+        this.form = {
+          id: row.itemId,
+          cardNum: row.expressNum
+        }
       })
     },
     handleDelete (index, row, scope) {
