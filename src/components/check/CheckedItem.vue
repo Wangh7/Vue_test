@@ -90,7 +90,36 @@
         <el-button @click="dialogCheckVisible = false">取消</el-button>
         <el-button v-if="form.status === 'N3'" type="primary" @click="confirm()">确认收货</el-button>
         <el-button v-if="form.status === 'N4'" type="danger" @click="fail()">退回</el-button>
-        <el-button v-if="form.status === 'N4'" type="success" @click="success()">通过</el-button>
+        <el-button v-if="form.status === 'N4'" type="success" @click="confirmNext()">通过并发货</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="向买家发货" :visible.sync="dialogBuyVisible">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form2"
+        label-width="150px"
+        class="demo-ruleForm"
+        style="text-align: left">
+        <!-- prop和v-model的名称需要一致 -->
+        <el-form-item label="收货人">
+          <div>{{form.nickname}}</div>
+        </el-form-item>
+        <el-form-item label="电话">
+          <div>{{form.phone}}</div>
+        </el-form-item>
+        <el-form-item label="地址">
+          <div>{{form.address}}</div>
+        </el-form-item>
+        <el-form-item label="快递单号" prop="expressNumNew">
+          <el-input v-model="form.expressNumNew"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="resetForm('form2')">重置</el-button>
+        <el-button @click="dialogBuyVisible = false">取消</el-button>
+        <el-button type="primary" @click="success('form2')">发货</el-button>
       </div>
     </el-dialog>
   </div>
@@ -106,13 +135,23 @@ export default {
       currentPage: 1,
       pageSize: 10,
       dialogCheckVisible: false,
+      dialogBuyVisible: false,
       form: {
         id: '',
         itemType: '',
         dueTime: '',
         price: '',
         expressNum: '',
-        status: ''
+        status: '',
+        expressNumNew: '',
+        address: '',
+        phone: '',
+        nickname: ''
+      },
+      rules: {
+        expressNumNew: [
+          {required: true, message: '请输入快递单号', trigger: 'blur'}
+        ]
       }
     }
   },
@@ -159,6 +198,18 @@ export default {
           expressNum: row.cardNum,
           status: row.status
         }
+        this.$axios
+          .get('/check/user', {
+            params: {
+              item_id: this.form.id
+            }
+          }).then(resp => {
+          if (resp && resp.status === 200) {
+            this.form.nickname = resp.data.nickname
+            this.form.phone = resp.data.phone
+            this.form.address = resp.data.address
+          }
+        })
       })
     },
     confirm () {
@@ -176,17 +227,35 @@ export default {
         }
       })
     },
-    success () {
-      this.dialogCheckVisible = false
-      this.$axios
-        .post('/check/entity/success', {
-          itemId: this.form.id
-        }).then(resp => {
-        if (resp && resp.data.code === 200) {
-          alert(resp.data.message)
-          this.loadItems()
+    confirmNext () {
+      this.dialogBuyVisible = true
+    },
+    success (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$confirm('您所填写的快递单号为 ' + this.form.expressNumNew + ' 一经确认不可修改！', '再次确认！', {
+            confirmButtonText: '奥利给',
+            cancelButtonText: '手残了',
+            type: 'warning'
+          }).then(() => {
+            this.dialogCheckVisible = false
+            this.dialogBuyVisible = false
+            this.$axios
+              .post('/check/entity/success', {
+                itemId: this.form.id,
+                expressNumNew: this.form.expressNumNew
+              }).then(resp => {
+              if (resp && resp.data.code === 200) {
+                alert(resp.data.message)
+                this.loadItems()
+              } else {
+                alert(resp.data.message)
+                return false
+              }
+            })
+          })
         } else {
-          alert(resp.data.message)
+          console.log('error submit!!')
           return false
         }
       })
@@ -205,6 +274,9 @@ export default {
           return false
         }
       })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }

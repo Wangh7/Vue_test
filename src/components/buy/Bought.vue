@@ -19,6 +19,16 @@
         label="卡片种类"
         sortable
         width="140px">
+        <template slot-scope="scope">
+          <div v-if="scope.row.itemStock.entity === true">
+            <span>{{scope.row.itemStock.itemType.typeName}}</span>
+            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+          </div>
+          <div v-if="scope.row.itemStock.entity === false">
+            <span>{{scope.row.itemStock.itemType.typeName}}</span>
+            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="itemStock.price.amount"
@@ -94,10 +104,14 @@
         <el-form-item label="礼品卡种类">
           <div>{{form.typeName}}</div>
         </el-form-item>
-        <el-form-item label="礼品卡卡号">
+        <el-form-item v-if="form.entity" label="快递单号">
+          <div v-if="form.cardNum !== '' && form.cardNum !== null">{{form.cardNum}}</div>
+          <div v-else>暂未发货</div>
+        </el-form-item>
+        <el-form-item v-else label="礼品卡卡号">
           <div>{{form.cardNum}}</div>
         </el-form-item>
-        <el-form-item label="礼品卡密码">
+        <el-form-item v-if="!form.entity" label="礼品卡密码">
           <el-button type="primary" @click="showPass(form.cardPass,form.itemId)">显示</el-button>
         </el-form-item>
         <el-form-item label="礼品卡余额">
@@ -108,7 +122,11 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false">完成</el-button>
+        <el-button v-if="form.entity && form.cardNum !== '' && form.cardNum !== null" type="success" @click="confirm()">
+          确认收货
+        </el-button>
+        <el-button v-else type="primary" @click="dialogFormVisible = false">完成</el-button>
+
       </div>
     </el-dialog>
   </div>
@@ -132,7 +150,8 @@ export default {
         price: '',
         cardNum: '',
         cardPass: '',
-        date: ''
+        date: '',
+        entity: ''
       }
     }
   },
@@ -212,7 +231,8 @@ export default {
           price: row.itemStock.price.amount,
           date: row.itemStock.dueTime,
           cardNum: row.itemStock.cardNum,
-          cardPass: row.itemStock.cardPass
+          cardPass: row.itemStock.cardPass,
+          entity: row.itemStock.entity
         }
       })
     },
@@ -238,6 +258,27 @@ export default {
         }
       }).then(resp => {
         alert(resp.data)
+      })
+    },
+    confirm () {
+      this.$confirm('确认收货？', '再次确认！', {
+        confirmButtonText: '奥利给',
+        cancelButtonText: '手残了',
+        type: 'warning'
+      }).then(() => {
+        this.dialogFormVisible = false
+        this.$axios
+          .post('/items/buy/entity', {
+            itemId: this.form.itemId
+          }).then(resp => {
+          if (resp && resp.data.code === 200) {
+            alert(resp.data.message)
+            this.loadItems()
+          } else {
+            alert(resp.data.message)
+            return false
+          }
+        })
       })
     }
   }

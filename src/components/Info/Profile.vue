@@ -20,6 +20,9 @@
       <el-form-item label="手机">
         <div>{{form.phone}}</div>
       </el-form-item>
+      <el-form-item label="地址">
+        <div>{{form.address}}</div>
+      </el-form-item>
       <el-form-item>
         <el-button type="warning" @click="handleEdit ()">修改</el-button>
       </el-form-item>
@@ -46,6 +49,9 @@
         <el-form-item label="手机" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入手机号码"></el-input>
         </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入收货地址"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="warning" @click="resetForm('form')">重置</el-button>
@@ -69,7 +75,8 @@ export default {
         id: '',
         username: '',
         nickname: '',
-        phone: ''
+        phone: '',
+        address: ''
       },
       rules: {
         nickname: [
@@ -78,6 +85,9 @@ export default {
         phone: [
           {required: true, message: '请输入电话号码', trigger: 'blur'},
           {validator: isPhone}
+        ],
+        address: [
+          {required: true, message: '请输入收货地址', trigger: 'blur'}
         ]
       }
     }
@@ -104,7 +114,8 @@ export default {
           id: this.form.id,
           username: this.form.username,
           nickname: this.form.nickname,
-          phone: this.form.phone
+          phone: this.form.phone,
+          address: this.form.address
         }
       })
     },
@@ -116,7 +127,8 @@ export default {
             .post('/user/single', {
               username: this.form.username,
               nickname: this.form.nickname,
-              phone: this.form.phone
+              phone: this.form.phone,
+              address: this.form.address
             })
             .then(resp => {
               if (resp && resp.status === 200) {
