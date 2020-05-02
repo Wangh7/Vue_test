@@ -27,16 +27,19 @@
       <el-table-column
         prop="itemType.typeName"
         label="卡片种类"
-        width="180px">
+        width="140px">
         <template slot-scope="scope">
-          <div v-if="scope.row.entity === true">
+          <el-col :span="12">
             <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
-          </div>
-          <div v-if="scope.row.entity === false">
-            <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
-          </div>
+          </el-col>
+          <el-col :span="12">
+            <div v-if="scope.row.entity === true">
+              <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+            </div>
+            <div v-if="scope.row.entity === false">
+              <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+            </div>
+          </el-col>
         </template>
       </el-table-column>
       <el-table-column
@@ -170,6 +173,12 @@
         class="demo-ruleForm"
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
+        <el-form-item label="平台收货地址">
+          <div>xx省xx市xx街道xx号</div>
+        </el-form-item>
+        <el-form-item label="平台收货电话">
+          <div>10086</div>
+        </el-form-item>
         <el-form-item label="快递单号" prop="expressNum">
           <el-input v-model="form.expressNum" placeholder="请输入快递单号"></el-input>
         </el-form-item>

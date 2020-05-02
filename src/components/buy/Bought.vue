@@ -20,14 +20,17 @@
         sortable
         width="140px">
         <template slot-scope="scope">
-          <div v-if="scope.row.itemStock.entity === true">
+          <el-col :span="12">
             <span>{{scope.row.itemStock.itemType.typeName}}</span>
-            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
-          </div>
-          <div v-if="scope.row.itemStock.entity === false">
-            <span>{{scope.row.itemStock.itemType.typeName}}</span>
-            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
-          </div>
+          </el-col>
+          <el-col :span="12">
+            <div v-if="scope.row.itemStock.entity === true">
+              <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+            </div>
+            <div v-if="scope.row.itemStock.entity === false">
+              <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+            </div>
+          </el-col>
         </template>
       </el-table-column>
       <el-table-column
@@ -53,6 +56,7 @@
         <template slot-scope="scope">
           <el-button type="text" @click="toggleExpand(scope.row)">查看进度</el-button>
           <el-button
+            :disabled="scope.row.status === 'F'"
             size="mini"
             @click="handleEdit(scope.row)">详情
           </el-button>
@@ -122,7 +126,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button v-if="form.entity && form.cardNum !== '' && form.cardNum !== null" type="success" @click="confirm()">
+        <el-button v-if="form.entity && form.cardNum !== '' && form.cardNum !== null && form.status !== 'Y'" type="success" @click="confirm()">
           确认收货
         </el-button>
         <el-button v-else type="primary" @click="dialogFormVisible = false">完成</el-button>
@@ -151,7 +155,8 @@ export default {
         cardNum: '',
         cardPass: '',
         date: '',
-        entity: ''
+        entity: '',
+        status: ''
       }
     }
   },
@@ -232,7 +237,8 @@ export default {
           date: row.itemStock.dueTime,
           cardNum: row.itemStock.cardNum,
           cardPass: row.itemStock.cardPass,
-          entity: row.itemStock.entity
+          entity: row.itemStock.entity,
+          status: row.status
         }
       })
     },

@@ -24,14 +24,17 @@
         label="卡片种类"
         width="180px">
         <template slot-scope="scope">
-          <div v-if="scope.row.entity === true">
+          <el-col :span="12">
             <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
-          </div>
-          <div v-if="scope.row.entity === false">
-            <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
-          </div>
+          </el-col>
+          <el-col :span="12">
+            <div v-if="scope.row.entity === true">
+              <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+            </div>
+            <div v-if="scope.row.entity === false">
+              <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+            </div>
+          </el-col>
         </template>
       </el-table-column>
       <el-table-column
@@ -40,6 +43,8 @@
         width="280px">
         <template slot-scope="scope">
           <div v-if="scope.row.status === 'F'">审核未通过</div>
+          <div v-if="scope.row.status === 'F1'">审核未通过，已退回</div>
+          <div v-if="scope.row.status === 'F2'">卖家已收货</div>
           <div v-if="scope.row.status === 'T'">审核通过</div>
           <div v-if="scope.row.status === 'N1'">初审通过，等待购买</div>
           <div v-if="scope.row.status === 'N2'">初审通过，等待发货</div>
@@ -73,23 +78,23 @@
         class="demo-ruleForm"
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
-        <el-form-item label="快递单号" prop="expressNum">
+        <el-form-item label="快递单号">
           <div>{{form.expressNum}}</div>
         </el-form-item>
-        <el-form-item label="礼品卡种类" prop="expressNum">
+        <el-form-item label="礼品卡种类">
           <div>{{form.itemType}}</div>
         </el-form-item>
-        <el-form-item label="余额" prop="expressNum">
+        <el-form-item label="余额">
           <div>{{form.price}}</div>
         </el-form-item>
-        <el-form-item label="到期时间" prop="expressNum">
+        <el-form-item label="到期时间">
           <div>{{form.dueTime | formatDate}}</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogCheckVisible = false">取消</el-button>
         <el-button v-if="form.status === 'N3'" type="primary" @click="confirm()">确认收货</el-button>
-        <el-button v-if="form.status === 'N4'" type="danger" @click="fail()">退回</el-button>
+        <el-button v-if="form.status === 'N4'" type="danger" @click="failNext()">退回</el-button>
         <el-button v-if="form.status === 'N4'" type="success" @click="confirmNext()">通过并发货</el-button>
       </div>
     </el-dialog>
@@ -122,6 +127,35 @@
         <el-button type="primary" @click="success('form2')">发货</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="向卖家退货" :visible.sync="dialogBackVisible">
+      <el-form
+        :model="form2"
+        :rules="rules"
+        ref="form3"
+        label-width="150px"
+        class="demo-ruleForm"
+        style="text-align: left">
+        <!-- prop和v-model的名称需要一致 -->
+        <el-form-item label="收货人">
+          <div>{{form2.nickname}}</div>
+        </el-form-item>
+        <el-form-item label="电话">
+          <div>{{form2.phone}}</div>
+        </el-form-item>
+        <el-form-item label="地址">
+          <div>{{form2.address}}</div>
+        </el-form-item>
+        <el-form-item label="快递单号" prop="expressNumNew">
+          <el-input v-model="form2.expressNumNew"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="resetForm('form3')">重置</el-button>
+        <el-button @click="dialogBackVisible = false">取消</el-button>
+        <el-button type="danger" @click="fail('form3')">退回</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,6 +170,7 @@ export default {
       pageSize: 10,
       dialogCheckVisible: false,
       dialogBuyVisible: false,
+      dialogBackVisible: false,
       form: {
         id: '',
         itemType: '',
@@ -143,6 +178,12 @@ export default {
         price: '',
         expressNum: '',
         status: '',
+        expressNumNew: '',
+        address: '',
+        phone: '',
+        nickname: ''
+      },
+      form2: {
         expressNumNew: '',
         address: '',
         phone: '',
@@ -187,6 +228,32 @@ export default {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
+    getUserInfo () {
+      this.$axios
+        .get('/check/buyer', {
+          params: {
+            item_id: this.form.id
+          }
+        }).then(resp => {
+        if (resp && resp.status === 200) {
+          this.form.nickname = resp.data.nickname
+          this.form.phone = resp.data.phone
+          this.form.address = resp.data.address
+        }
+      })
+      this.$axios
+        .get('/check/seller', {
+          params: {
+            item_id: this.form.id
+          }
+        }).then(resp => {
+        if (resp && resp.status === 200) {
+          this.form2.nickname = resp.data.nickname
+          this.form2.phone = resp.data.phone
+          this.form2.address = resp.data.address
+        }
+      })
+    },
     handleCheck (index, row) {
       this.dialogCheckVisible = true
       this.$nextTick(function () {
@@ -198,18 +265,7 @@ export default {
           expressNum: row.cardNum,
           status: row.status
         }
-        this.$axios
-          .get('/check/user', {
-            params: {
-              item_id: this.form.id
-            }
-          }).then(resp => {
-          if (resp && resp.status === 200) {
-            this.form.nickname = resp.data.nickname
-            this.form.phone = resp.data.phone
-            this.form.address = resp.data.address
-          }
-        })
+        this.getUserInfo()
       })
     },
     confirm () {
@@ -229,6 +285,9 @@ export default {
     },
     confirmNext () {
       this.dialogBuyVisible = true
+    },
+    failNext () {
+      this.dialogBackVisible = true
     },
     success (formName) {
       this.$refs[formName].validate((valid) => {
@@ -260,18 +319,30 @@ export default {
         }
       })
     },
-    fail () {
-      this.dialogCheckVisible = false
-      this.$axios
-        .post('/check/entity/fail', {
-          itemId: this.form.id
-        }).then(resp => {
-        if (resp && resp.data.code === 200) {
-          alert(resp.data.message)
-          this.loadItems()
-        } else {
-          alert(resp.data.message)
-          return false
+    fail (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$confirm('您所填写的快递单号为 ' + this.form.expressNumNew + ' 一经确认不可修改！', '再次确认！', {
+            confirmButtonText: '奥利给',
+            cancelButtonText: '手残了',
+            type: 'warning'
+          }).then(() => {
+            this.dialogCheckVisible = false
+            this.dialogBackVisible = false
+            this.$axios
+              .post('/check/entity/fail', {
+                itemId: this.form.id,
+                expressNumNew: this.form2.expressNumNew
+              }).then(resp => {
+              if (resp && resp.data.code === 200) {
+                alert(resp.data.message)
+                this.loadItems()
+              } else {
+                alert(resp.data.message)
+                return false
+              }
+            })
+          })
         }
       })
     },

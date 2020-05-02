@@ -16,14 +16,17 @@
         label="卡片种类"
         width="180px">
         <template slot-scope="scope">
-          <div v-if="scope.row.entity === true">
+          <el-col :span="12">
             <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
-          </div>
-          <div v-if="scope.row.entity === false">
-            <span>{{scope.row.itemType.typeName}}</span>
-            <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
-          </div>
+          </el-col>
+          <el-col :span="12">
+            <div v-if="scope.row.entity === true">
+              <span style="color:#d0b556;background:#6b5f22;display:inline-block;padding:0 3px">实体卡</span>
+            </div>
+            <div v-if="scope.row.entity === false">
+              <span style="color:#6bb0ee;background:#2c4882;display:inline-block;padding:0 3px">电子卡</span>
+            </div>
+          </el-col>
         </template>
       </el-table-column>
       <el-table-column
@@ -62,7 +65,6 @@
     <el-dialog title="审查商品信息" :visible.sync="dialogFormVisible">
       <el-form
         :model="form"
-        :rules="rules"
         ref="form"
         label-width="150px"
         class="demo-ruleForm"

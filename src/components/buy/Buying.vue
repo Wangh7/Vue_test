@@ -239,7 +239,7 @@ export default {
       })
     },
     purchaseCheck () {
-      this.$confirm('您一共选择了' + this.multipleSelection.length + '件商品，共需支付' + this.totalPrice + '元', '再次确认！', {
+      this.$confirm('您一共选择了' + this.multipleSelection.length + '件商品，共需支付' + this.totalPrice + '元。若购买实体卡，系统将按照个人信息中填写的地址和电话进行发货', '再次确认！', {
         confirmButtonText: '冲！',
         cancelButtonText: '告辞',
         type: 'warning'
