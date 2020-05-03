@@ -63,7 +63,7 @@
         <template slot-scope="scope">
           <el-button type="text" @click="toggleExpand(scope.row)">查看进度</el-button>
           <el-button
-            v-if="scope.row.status !== 'N2'"
+            v-if="scope.row.status !== 'N2' && scope.row.status !== 'F1'"
             size="mini"
             :disabled="scope.row.status !== 'N'"
             @click="handleEdit(scope.$index, scope.row)">编辑
@@ -72,6 +72,11 @@
             v-if="scope.row.status === 'N2'"
             size="mini"
             @click="handleSell(scope.$index, scope.row)">发货
+          </el-button>
+          <el-button
+            v-if="scope.row.status === 'F1'"
+            size="mini"
+            @click="handleBack(scope.$index, scope.row)">收货
           </el-button>
           <el-popover
             placement="top"
@@ -189,6 +194,23 @@
         <el-button type="primary" @click="submitForm2('form2')">发货</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="查看退回信息" :visible.sync="dialogBackVisible">
+      <el-form
+        :model="form"
+        label-width="150px"
+        class="demo-ruleForm"
+        style="text-align: left">
+        <el-form-item label="快递单号">
+          <div>{{form.cardNum}}</div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="success" @click="confirm()">
+          确认收货
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -211,6 +233,7 @@ export default {
       loading: true,
       dialogEditVisible: false,
       dialogSellVisible: false,
+      dialogBackVisible: false,
       form: {
         id: '',
         type: '',
@@ -436,6 +459,15 @@ export default {
         }
       })
     },
+    handleBack (index, row) {
+      this.dialogBackVisible = true
+      this.$nextTick(function () {
+        this.form = {
+          id: row.itemId,
+          cardNum: row.cardPass
+        }
+      })
+    },
     handleDelete (index, row, scope) {
       scope._self.$refs[`popover-${index}`].doClose()
       this.$axios.post('/items/sell/delete', {
@@ -453,6 +485,27 @@ export default {
     resetForm (formName) {
       this.$refs[formName].resetFields()
       this.timeDiscount.discount = 0
+    },
+    confirm () {
+      this.$confirm('确认收货？', '再次确认！', {
+        confirmButtonText: '奥利给',
+        cancelButtonText: '手残了',
+        type: 'warning'
+      }).then(() => {
+        this.dialogBackVisible = false
+        this.$axios
+          .post('/items/sell/back', {
+            itemId: this.form.id
+          }).then(resp => {
+          if (resp && resp.data.code === 200) {
+            alert(resp.data.message)
+            this.loadItems()
+          } else {
+            alert(resp.data.message)
+            return false
+          }
+        })
+      })
     }
   }
 }

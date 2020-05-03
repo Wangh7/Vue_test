@@ -14,6 +14,16 @@
       <span style="font-size: 28px;color: #d90;font-weight: bold">{{index.totalSellN}}</span>
       <span>件商品待审核</span>
     </div>
+    <div>
+      <span>您发布的实体卡商品中有</span>
+      <span style="font-size: 28px;color: #d00;font-weight: bold">{{index.totalSellW}}</span>
+      <span>件商品审核通过，请及时发货</span>
+    </div>
+    <div>
+      <span>您发布的实体卡商品中有</span>
+      <span style="font-size: 28px;color: #d00;font-weight: bold">{{index.totalSellF1}}</span>
+      <span>件商品审核未通过，请注意查收退货</span>
+    </div>
   </div>
 </template>
 

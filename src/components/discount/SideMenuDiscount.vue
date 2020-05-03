@@ -21,7 +21,7 @@ export default {
   data () {
     return {
       sidelist: [
-        {name: '促销公告', index: '/discount/index', icon: 'el-icon-menu'},
+        // {name: '促销公告', index: '/discount/index', icon: 'el-icon-menu'},
         {name: '商品折扣', index: '/discount/item', icon: 'el-icon-setting'},
         {name: '时间折扣', index: '/discount/time', icon: 'el-icon-setting'}
       ]
