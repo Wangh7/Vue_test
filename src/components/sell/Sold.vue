@@ -110,7 +110,7 @@
     </el-table>
     <el-pagination
       @current-change="handleCurrentChange"
-      style="width: 1000px"
+      style="width: 100%"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="items.length">

@@ -2,7 +2,7 @@
   <div>
     <el-table
       :data="items"
-      style="width: 1000px"
+      style="width: 100%"
       :default-sort="{prop:'createTime',order:'descending'}"
       @selection-change="handleSelectionChange"
       ref="table">
@@ -15,7 +15,7 @@
         prop="createTime"
         label="收藏日期"
         sortable
-        width="180px">
+        width="160px">
         <template slot-scope="scope">
           <div v-if="scope.row.itemStock.status !== 'Y'">{{scope.row.createTime | formatDate}}</div>
           <div v-else style="text-decoration:line-through">{{scope.row.createTime | formatDate}}</div>
@@ -106,7 +106,7 @@
       </el-table-column>
     </el-table>
     <br>
-    <el-row style="width: 1000px">
+    <el-row style="width: 100%">
       <el-col :span="18">
         <div style="float: right;">共选择{{multipleSelection.length}}件，总计{{totalPrice}}元</div>
       </el-col>

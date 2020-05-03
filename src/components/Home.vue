@@ -1,7 +1,11 @@
 <template>
     <div>
       <nav-menu/>
-      <router-view/>
+      <el-row type="flex" justify="center">
+        <el-col style="width: 1200px">
+          <router-view/>
+        </el-col>
+      </el-row>
     </div>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <el-menu
     default-active="all"
-    class="el-menu-vertical-demo"
     @select="handleSelect">
     <div>请选择种类</div>
     <el-menu-item :index="'all'">所有种类</el-menu-item>

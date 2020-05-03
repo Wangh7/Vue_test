@@ -2,7 +2,7 @@
   <div>
     <el-table
       :data="items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-      style="width: 1000px"
+      style="width: 100%"
       :default-sort="{prop:'finishTime',order:'descending'}"
       ref="table">
       <el-table-column
@@ -92,7 +92,7 @@
     </el-table>
     <el-pagination
       @current-change="handleCurrentChange"
-      style="width: 1000px"
+      style="width: 100%"
       :current-page="currentPage"
       :page-size="pageSize"
       :total="items.length">

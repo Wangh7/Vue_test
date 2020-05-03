@@ -6,11 +6,10 @@
     background-color="#545c64"
     text-color="#fff"
     active-text-color="#ffd04b"
-    style="min-width: 1000px;">
+    style="min-width: 1200px;padding-left: calc((100% - 1200px)/2);padding-right: calc((100% - 1200px)/2);">
     <el-menu-item v-for="(item,i) in menus" :key="i" :index="item.path">
       {{ item.nameZh }}
     </el-menu-item>
-
     <el-menu-item style="float: right;" v-on:click="logoff">
       退出登录
     </el-menu-item>
