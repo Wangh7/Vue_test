@@ -1,7 +1,8 @@
 <template>
   <el-menu
     default-active="all"
-    @select="handleSelect">
+    @select="handleSelect"
+    style="min-height: 650px;">
     <div>请选择种类</div>
     <el-menu-item :index="'all'">所有种类</el-menu-item>
     <el-menu-item v-for="(type,i) in types" :key="i" :index="type.typeCode">{{type.typeName}}</el-menu-item>

@@ -2,6 +2,7 @@
   <el-menu
     :default-active="currentPath"
     class="el-menu-vertical-demo"
+    style="min-height: 650px;"
     router>
     <el-menu-item v-for="(side,i) in sidelist" :key="i" :index="side.index">
       <i :class="side.icon"/>
