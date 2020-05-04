@@ -10,13 +10,13 @@
         style="text-align: left">
         <!-- prop和v-model的名称需要一致 -->
         <el-form-item label="原密码" prop="oldPass">
-          <el-input v-model="form.oldPass" type="password" placeholder="请输入原密码"></el-input>
+          <el-input prefix-icon="el-icon-key" v-model="form.oldPass" type="password" placeholder="请输入原密码"></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="newPass">
-          <el-input v-model="form.newPass" type="password" placeholder="请输入新密码"></el-input>
+          <el-input prefix-icon="el-icon-key" v-model="form.newPass" type="password" placeholder="请输入新密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="rePass">
-          <el-input v-model="form.rePass" type="password" placeholder="请确认新密码"></el-input>
+          <el-input prefix-icon="el-icon-key" v-model="form.rePass" type="password" placeholder="请确认新密码"></el-input>
         </el-form-item>
 
         <el-form-item>

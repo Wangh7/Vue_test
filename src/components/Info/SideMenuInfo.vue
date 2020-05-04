@@ -22,9 +22,9 @@ export default {
   data () {
     return {
       sidelist: [
-        {name: '个人信息', index: '/info/profile', icon: 'el-icon-menu'},
-        {name: '修改密码', index: '/info/pass', icon: 'el-icon-setting'},
-        {name: '账户金额', index: '/info/price', icon: 'el-icon-setting'}
+        {name: '个人信息', index: '/info/profile', icon: 'el-icon-user'},
+        {name: '修改密码', index: '/info/pass', icon: 'el-icon-key'},
+        {name: '账户金额', index: '/info/price', icon: 'el-icon-bank-card'}
       ]
     }
   }

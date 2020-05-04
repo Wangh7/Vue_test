@@ -21,15 +21,15 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.entity === 'false'" label="礼品卡卡号" prop="cardNum">
-          <el-input v-model="form.cardNum" placeholder="请输入卡号"></el-input>
+          <el-input prefix-icon="el-icon-bank-card" v-model="form.cardNum" placeholder="请输入卡号"></el-input>
         </el-form-item>
         <el-form-item v-if="form.entity === 'false'" label="礼品卡密码" prop="cardPass">
-          <el-input v-model="form.cardPass" placeholder="请输入卡密"></el-input>
+          <el-input prefix-icon="el-icon-key" v-model="form.cardPass" placeholder="请输入卡密"></el-input>
         </el-form-item>
         <el-form-item label="礼品卡余额" prop="price">
           <el-row>
             <el-col :span="10">
-              <el-input v-model="form.price" placeholder="请输入余额"></el-input>
+              <el-input prefix-icon="el-icon-coin" v-model="form.price" placeholder="请输入余额"></el-input>
             </el-col>
             <el-col :span="14">
               <div v-if="form.type && form.price">(预计收入：{{form.price}}*{{form.type.typeDiscountBuy}}*{{timeDiscount.discount}}={{(form.price*form.type.typeDiscountBuy*timeDiscount.discount).toFixed(2)}}元)</div>

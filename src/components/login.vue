@@ -8,17 +8,16 @@
     ref="loginForm">
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
-      <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
+      <el-input prefix-icon="el-icon-user" type="text" v-model="loginForm.username" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
+      <el-input prefix-icon="el-icon-key" type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
     <el-form-item>
       <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" style="width: 30%;border: none" v-on:click="login">登录</el-button>
-      <!--<el-button type="info" style="width: 30%;border: none" v-on:click="clear">重置</el-button>-->
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('loginForm')">重置</el-button>
       <el-button type="warning" stype="width: 30%;border: none" v-on:click="register">注册</el-button>
     </el-form-item>

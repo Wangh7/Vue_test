@@ -13,23 +13,23 @@
                 placeholder="用户名"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.password" auto-complete="off"
+      <el-input prefix-icon="el-icon-key" type="password" v-model="registerForm.password" auto-complete="off"
                 placeholder="密码"
                 show-password></el-input>
     </el-form-item>
     <el-form-item prop="checkPass">
-      <el-input prefix-icon="el-icon-lock" type="password" v-model="registerForm.checkPass" auto-complete="off"
+      <el-input prefix-icon="el-icon-key" type="password" v-model="registerForm.checkPass" auto-complete="off"
                 placeholder="确认密码"
                 show-password></el-input>
     </el-form-item>
     <el-form-item prop="phone">
-      <el-input prefix-icon="el-icon-phone" type="text" v-model="registerForm.phone" auto-complete="off"
+      <el-input prefix-icon="el-icon-mobile-phone" type="text" v-model="registerForm.phone" auto-complete="off"
                 placeholder="手机号码"></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" style="width: 30%;border: none" v-on:click="register('registerForm')">注册</el-button>
-      <!--<el-button type="info" style="width: 30%;border: none" v-on:click="clear">重置</el-button>-->
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('registerForm')">重置</el-button>
+      <el-button type="info" style="width: 30%;border: none" @click="$router.replace({path: '/login'})">返回</el-button>
     </el-form-item>
   </el-form>
   </body>

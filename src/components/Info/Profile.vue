@@ -44,13 +44,13 @@
           <div>{{form.username}}</div>
         </el-form-item>
         <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
+          <el-input prefix-icon="el-icon-user" v-model="form.nickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码"></el-input>
+          <el-input prefix-icon="el-icon-mobile-phone" v-model="form.phone" placeholder="请输入手机号码"></el-input>
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入收货地址"></el-input>
+          <el-input prefix-icon="el-icon-location-outline" v-model="form.address" placeholder="请输入收货地址"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

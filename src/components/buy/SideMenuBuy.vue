@@ -22,9 +22,9 @@ export default {
   data () {
     return {
       sidelist: [
-        {name: '概 览', index: '/buy/index', icon: 'el-icon-menu'},
-        {name: '立即结算', index: '/buy/buying', icon: 'el-icon-setting'},
-        {name: '我已购买', index: '/buy/bought', icon: 'el-icon-setting'}
+        {name: '数据概览', index: '/buy/index', icon: 'el-icon-data-line'},
+        {name: '立即结算', index: '/buy/buying', icon: 'el-icon-shopping-cart-2'},
+        {name: '我已购买', index: '/buy/bought', icon: 'el-icon-shopping-bag-1'}
       ]
     }
   }

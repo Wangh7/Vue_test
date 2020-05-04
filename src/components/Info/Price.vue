@@ -8,7 +8,7 @@
       style="text-align: left">
       <!-- prop和v-model的名称需要一致 -->
       <el-form-item label="账户余额">
-        <div>{{form.price}}</div>
+        <div>¥{{form.price}}</div>
       </el-form-item>
       <el-form-item>
         <el-button type="success" @click="moneyInVisible = true">充值</el-button>

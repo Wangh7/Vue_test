@@ -14,7 +14,9 @@
           <el-link :underline="false" slot="reference">联系作者</el-link>
         </el-popover>
         <el-divider direction="vertical"></el-divider>
-        <el-link :underline="false" href="http://nas.wangh7.com">友情链接</el-link>
+        <el-link :underline="false" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=qN-Jxs-An_jOx9DFycHEhsvHxQ">给我写信</el-link>
+        <el-divider direction="vertical"></el-divider>
+        <el-link :underline="false" target="_blank" href="http://nas.wangh7.com">友情链接</el-link>
         <el-divider direction="vertical"></el-divider>
         <el-link :underline="false">隐私政策</el-link>
       </el-col>

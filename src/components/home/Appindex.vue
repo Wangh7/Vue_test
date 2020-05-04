@@ -45,7 +45,7 @@
           style="height:120px;width: 22%;margin-right: 22px;float: left;background: #d3dce6"
         >
           <img style="width: 30%;float: left" :src="'/static/hot/new.png'">
-          <div style="font-size: 30px;text-align: center;margin-top: 5px;">{{item.typeName}}</div>
+          <div style="font-size: 24px;text-align: center;margin-top: 5px;">{{item.typeName}}</div>
           <div style="text-align: right;margin-top: 20px">
             <el-link :underline="false" style="font-size: 16px" @click="shop">立即购买</el-link>
           </div>

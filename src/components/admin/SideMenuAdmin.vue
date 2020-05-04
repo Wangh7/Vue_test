@@ -22,9 +22,9 @@ export default {
   data () {
     return {
       sidelist: [
-        {name: '概览', index: '/admin/index', icon: 'el-icon-menu'},
-        {name: '用户管理', index: '/admin/user', icon: 'el-icon-setting'},
-        {name: '角色管理', index: '/admin/role', icon: 'el-icon-setting'}
+        // {name: '概览', index: '/admin/index', icon: 'el-icon-menu'},
+        {name: '用户管理', index: '/admin/user', icon: 'el-icon-user'},
+        {name: '角色管理', index: '/admin/role', icon: 'el-icon-key'}
       ]
     }
   }

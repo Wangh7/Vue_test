@@ -280,7 +280,7 @@ export default new Router({
           path: '/admin',
           name: 'Admin',
           component: Admin,
-          redirect: '/admin/index',
+          redirect: '/admin/user',
           children: [
             {
               path: '/admin/index',

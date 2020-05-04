@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-row style="width: 880px">
+    <el-row style="width: 100%">
       <div v-if="items.length === 0" style="font-size: 24px">Sorry，暂无数据</div>
       <el-card
         v-for="item in items.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         :key="item.id"
-        style="width: 200px;height: 250px;margin-bottom: 20px;margin-right: 15px;float: left"
+        style="width: 200px;height: 250px;margin-bottom: 25px;margin-left: 30px;float: left"
         body-style="padding: 0px"
         shadow="hover">
         <div style="position: relative;">
@@ -15,19 +15,27 @@
           </div>
           <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
         </div>
-        <div style="padding: 14px;">
-          <span>面额：{{item.price.amount}}</span>
-          <br>
-          <span>价格：{{(item.price.amount*item.itemType.typeDiscountSell).toFixed(2)}}</span>
-          <br>
-          <span>到期时间：{{item.dueTime | formatDateNoTime}}</span>
-          <div class="bottom clearfix">
-            <el-button type="text" class="button" @click="shopCar(item.itemId)">加入购物车</el-button>
+        <div style="padding-top: 14px;padding-left: 8px;padding-right: 8px;">
+          <div style="text-align: left;">
+            <strong style="font-size: 24px;color: #f60">¥{{(item.price.amount*item.itemType.typeDiscountSell*diffDate(item.dueTime)).toFixed(2).split(".")[0]}}.</strong><strong style="font-size: 16px;color: #f60">{{(item.price.amount*item.itemType.typeDiscountSell*diffDate(item.dueTime)).toFixed(2).split(".")[1]}}</strong>
+            <strong style="float: right;font-size: 24px;color:#a4d007;background:#4c6b22;display:inline-block;padding:0 3px">-{{100-(item.itemType.typeDiscountSell*diffDate(item.dueTime)).toFixed(2)*100}}%</strong>
+          </div>
+          <div style="text-align:left;padding-top: 3px;">
+            <i class="el-icon-bank-card"></i>
+            ¥{{item.price.amount}}
+          </div>
+          <div style="text-align:left;padding-top: 3px;">
+            <i class="el-icon-time"></i>
+            {{item.dueTime | formatDateNoTime}}
+            <span v-if="(item.dueTime-(new Date()).valueOf())<2592000000" style="float: right;color:#d00;font-size: small">即将到期</span>
+          </div>
+          <div>
+            <el-button style="float: right;padding: 0" type="text" icon="el-icon-shopping-cart-2" @click="shopCar(item.itemId)">加入购物车</el-button>
           </div>
         </div>
       </el-card>
     </el-row>
-    <el-row style="width: 880px">
+    <el-row style="width: 100%">
       <el-pagination
         v-if="items.length !==0"
         @current-change="handleCurrentChange"
@@ -46,6 +54,7 @@ export default {
     return {
       items: [],
       types: [],
+      discounts: [],
       currentPage: 1,
       pageSize: 16
     }
@@ -54,6 +63,7 @@ export default {
   mounted () {
     this.loadItems()
     this.loadTypes()
+    this.loadDiscounts()
   },
   filters: {
     formatDateNoTime: function (value) {
@@ -85,6 +95,26 @@ export default {
         }
       })
     },
+    loadDiscounts () {
+      let _this = this
+      this.$axios.get('/items/discount/time').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.discounts = resp.data
+        }
+      })
+    },
+    diffDate (date) {
+      let day = Math.floor((date - new Date()) / 86400000)
+      if (day <= 0) {
+        return 0
+      }
+      for (let i = 0; i < this.discounts.length; i++) {
+        if (day < this.discounts[i].timeLeftday) {
+          return this.discounts[i].discountSell
+        }
+      }
+      return 1
+    },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
     },
@@ -109,28 +139,8 @@ export default {
 
 <style scoped>
 
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-
-  .button {
-    padding: 0;
-    float: right;
-  }
-
   .image {
     width: 100%;
     display: block;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-
-  .clearfix:after {
-    clear: both
   }
 </style>
