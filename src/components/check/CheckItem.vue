@@ -245,7 +245,7 @@ export default {
           pass: pass
         }
       }).then(resp => {
-        this.$alert(resp.data,'商品卡密',{
+        this.$alert(resp.data, '商品卡密', {
           confirmButtonText: '完成'
         })
       })

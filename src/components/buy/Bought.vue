@@ -126,7 +126,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button v-if="form.entity && form.cardNum !== '' && form.cardNum !== null && form.status !== 'Y'" type="success" @click="confirm()">
+        <el-button v-if="form.entity && form.cardNum !== '' && form.cardNum !== null && form.status !== 'Y'"
+                   type="success" @click="confirm()">
           确认收货
         </el-button>
         <el-button v-else type="primary" @click="dialogFormVisible = false">完成</el-button>
@@ -271,7 +272,7 @@ export default {
           item_id: itemId
         }
       }).then(resp => {
-        this.$alert(resp.data,'商品卡密',{
+        this.$alert(resp.data, '商品卡密', {
           confirmButtonText: '完成'
         })
       })

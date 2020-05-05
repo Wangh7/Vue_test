@@ -13,7 +13,7 @@
             <img v-if="item.entity === false" :src="'/static/electric.png'">
             <img v-if="item.entity === true" :src="'/static/entity.png'">
           </div>
-          <img :src="'/static/'+item.itemType.typeCode+'.png'" class="image" alt="封面">
+          <img :src="'/static/'+item.itemType.typeCode+'.png'" onerror="this.src='/static/none.png'" class="image" alt="封面">
         </div>
         <div style="padding-top: 14px;padding-left: 8px;padding-right: 8px;">
           <div style="text-align: left;">

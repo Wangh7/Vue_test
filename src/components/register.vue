@@ -27,6 +27,23 @@
                 placeholder="手机号码"></el-input>
     </el-form-item>
     <el-form-item>
+      <el-popover
+        placement="top"
+        trigger="click">
+        <slide-verify
+          ref="slideblock"
+          @again="onAgain"
+          @success="onSuccess"
+          @fulfilled="onFulfilled"
+          @fail="onFail"
+          @refresh="onRefresh"
+          :accuracy="5"
+          :slider-text="'滑动验证'"
+        ></slide-verify>
+        <el-button :type="btStyle.type" style="width: 100%;" slot="reference">{{btStyle.name}}</el-button>
+      </el-popover>
+    </el-form-item>
+    <el-form-item>
       <el-button type="primary" style="width: 30%;border: none" v-on:click="register('registerForm')">注册</el-button>
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('registerForm')">重置</el-button>
       <el-button type="info" style="width: 30%;border: none" @click="$router.replace({path: '/login'})">返回</el-button>
@@ -53,6 +70,12 @@ export default {
     }
     return {
       checked: true,
+      verify: false,
+      btStyle: {
+        type: '',
+        name: '点我验证',
+        icon: ''
+      },
       registerForm: {
         username: '',
         password: '',
@@ -81,34 +104,64 @@ export default {
   methods: {
     register (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let _this = this
-          this.$axios
-            .post('/register', {
-              username: this.registerForm.username,
-              password: this.registerForm.password,
-              nickname: '用户',
-              phone: this.registerForm.phone
-            })
-            .then(resp => {
-              if (resp.data.code === 200) {
-                this.$alert('注册成功', '提示', {
-                  confirmButtonText: '确定'
-                })
-                _this.$router.replace('/login')
-              } else {
-                this.$alert(resp.data.message, '提示', {
-                  confirmButtonText: '确定'
-                })
-              }
-            })
-            .catch(failResponse => {
-            })
+        if (!this.verify) {
+          this.onForget()
+        } else {
+          if (valid) {
+            let _this = this
+            this.$axios
+              .post('/register', {
+                username: this.registerForm.username,
+                password: this.registerForm.password,
+                nickname: '用户',
+                phone: this.registerForm.phone
+              })
+              .then(resp => {
+                if (resp.data.code === 200) {
+                  this.$alert('注册成功', '提示', {
+                    confirmButtonText: '确定'
+                  })
+                  _this.$router.replace('/login')
+                } else {
+                  this.$alert(resp.data.message, '提示', {
+                    confirmButtonText: '确定'
+                  })
+                }
+              })
+              .catch(failResponse => {
+              })
+          }
         }
       })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+      this.$refs.slideblock.reset()
+    },
+    onSuccess () {
+      this.verify = true
+      this.btStyle.type = 'success'
+      this.btStyle.name = '验证成功'
+    },
+    onFail () {
+      this.verify = false
+      this.btStyle.type = 'danger'
+      this.btStyle.name = '验证失败'
+    },
+    onRefresh () {
+      this.verify = false
+      this.btStyle.type = ''
+      this.btStyle.name = '点我验证'
+    },
+    onFulfilled () {
+      this.verify = false
+      this.btStyle.type = ''
+      this.btStyle.name = '点我验证'
+    },
+    onForget () {
+      this.verify = false
+      this.btStyle.type = 'warning'
+      this.btStyle.name = '你还没有通过验证(´･ω･｀)'
     }
   }
 }

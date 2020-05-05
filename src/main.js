@@ -6,6 +6,8 @@ import router from './router'
 import ElementUI from 'element-ui'
 import store from './store'
 import 'element-ui/lib/theme-chalk/index.css'
+import SlideVerify from 'vue-monoplasty-slide-verify'
+
 // 设置反向代理 前端请求发送到8443/api
 var axios = require('axios')
 axios.defaults.baseURL = 'http://localhost:8443/api'
@@ -15,6 +17,7 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+Vue.use(SlideVerify)
 // 判断路径是否需要登录 需要：判断store是否存储user 存在放行 否则跳转登录页面 全局钩子
 /* router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) { /!* 要去的路径是否需要登录 *!/

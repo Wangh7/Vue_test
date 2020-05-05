@@ -50,7 +50,6 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('form')">立即发布</el-button>
           <el-button @click="resetForm('form')">重置</el-button>
-          <el-button type="warning" @click="test">测试</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -183,17 +182,6 @@ export default {
     resetForm (formName) {
       this.$refs[formName].resetFields()
       this.timeDiscount.discount = 0
-    },
-    test () {
-      let myDate = new Date()
-      let hour = myDate.getHours() > 9 ? myDate.getHours() : '0' + myDate.getHours()
-      let min = myDate.getMinutes() > 9 ? myDate.getMinutes() : '0' + myDate.getMinutes()
-      let sec = myDate.getSeconds() > 9 ? myDate.getSeconds() : '0' + myDate.getSeconds()
-      let year = myDate.getFullYear()
-      let mon = myDate.getMonth() > 9 ? (myDate.getMonth() + 1) : '0' + (myDate.getMonth() + 1)
-      let day = myDate.getDate() > 9 ? myDate.getDate() : '0' + myDate.getDate()
-      console.log(year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec)
-      console.log(this.form.date)
     }
   }
 }
