@@ -78,7 +78,11 @@ export default {
         status: '+'
       }).then(resp => {
         if (resp && resp.status === 200) {
-          alert('充值成功')
+          this.$message({
+            message: '充值成功',
+            type: 'success',
+            center: true
+          })
         }
       })
       this.moneyInVisible = false
@@ -90,7 +94,11 @@ export default {
         status: '-'
       }).then(resp => {
         if (resp && resp.status === 200) {
-          alert('提现成功')
+          this.$message({
+            message: '提现成功',
+            type: 'success',
+            center: true
+          })
         }
       })
       this.moneyOutVisible = false

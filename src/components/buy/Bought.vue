@@ -249,9 +249,17 @@ export default {
       }).then(resp => {
         if (resp && resp.status === 200) {
           this.loadItems()
-          alert('删除成功')
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            center: true
+          })
         } else {
-          alert('删除失败')
+          this.$message({
+            message: '删除失败',
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })
@@ -263,7 +271,9 @@ export default {
           item_id: itemId
         }
       }).then(resp => {
-        alert(resp.data)
+        this.$alert(resp.data,'商品卡密',{
+          confirmButtonText: '完成'
+        })
       })
     },
     confirm () {
@@ -278,10 +288,18 @@ export default {
             itemId: this.form.itemId
           }).then(resp => {
           if (resp && resp.data.code === 200) {
-            alert(resp.data.message)
+            this.$message({
+              message: resp.data.message,
+              type: 'success',
+              center: true
+            })
             this.loadItems()
           } else {
-            alert(resp.data.message)
+            this.$message({
+              message: resp.data.message,
+              type: 'danger',
+              center: true
+            })
             return false
           }
         })

@@ -167,9 +167,17 @@ export default {
           this.dialogFormVisible = false
           this.dialogItemVisible = false
           this.loadTypes()
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'success',
+            center: true
+          })
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'danger',
+            center: true
+          })
         }
       })
     },
@@ -205,9 +213,17 @@ export default {
       }).then(resp => {
         if (resp && resp.data.code === 200) {
           this.loadTypes()
-          alert('删除成功')
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            center: true
+          })
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })

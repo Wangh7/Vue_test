@@ -126,9 +126,17 @@ export default {
         }
       }).then(resp => {
         if (resp && resp.data.code === 200) {
-          alert('加入购物车成功')
+          this.$message({
+            message: '加入购物车成功',
+            type: 'success',
+            center: true
+          })
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'warning',
+            center: true
+          })
         }
       })
     }

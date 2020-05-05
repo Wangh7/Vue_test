@@ -275,10 +275,18 @@ export default {
           itemId: this.form.id
         }).then(resp => {
         if (resp && resp.data.code === 200) {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'success',
+            center: true
+          })
           this.loadItems()
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })
@@ -305,16 +313,23 @@ export default {
                 expressNumNew: this.form.expressNumNew
               }).then(resp => {
               if (resp && resp.data.code === 200) {
-                alert(resp.data.message)
+                this.$message({
+                  message: resp.data.message,
+                  type: 'success',
+                  center: true
+                })
                 this.loadItems()
               } else {
-                alert(resp.data.message)
+                this.$message({
+                  message: resp.data.message,
+                  type: 'danger',
+                  center: true
+                })
                 return false
               }
             })
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -335,10 +350,18 @@ export default {
                 expressNumNew: this.form2.expressNumNew
               }).then(resp => {
               if (resp && resp.data.code === 200) {
-                alert(resp.data.message)
+                this.$message({
+                  message: resp.data.message,
+                  type: 'success',
+                  center: true
+                })
                 this.loadItems()
               } else {
-                alert(resp.data.message)
+                this.$message({
+                  message: resp.data.message,
+                  type: 'danger',
+                  center: true
+                })
                 return false
               }
             })

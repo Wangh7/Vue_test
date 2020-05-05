@@ -132,10 +132,18 @@ export default {
             })
             .then(resp => {
               if (resp && resp.status === 200) {
-                alert('修改成功')
+                this.$message({
+                  message: '修改成功',
+                  type: 'success',
+                  center: true
+                })
                 this.loadUsers()
               } else {
-                alert('修改失败')
+                this.$message({
+                  message: '修改失败',
+                  type: 'danger',
+                  center: true
+                })
                 return false
               }
             })

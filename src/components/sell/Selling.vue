@@ -160,15 +160,22 @@ export default {
               entity: this.form.entity
             }).then(resp => {
             if (resp && resp.data.code === 200) {
-              alert(resp.data.message)
+              this.$message({
+                message: resp.data.message,
+                type: 'success',
+                center: true
+              })
               this.resetForm(formName)
             } else {
-              alert(resp.data.message)
+              this.$message({
+                message: resp.data.message,
+                type: 'danger',
+                center: true
+              })
               return false
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

@@ -140,9 +140,17 @@ export default {
         if (resp && resp.data.code === 200) {
           this.dialogFormVisible = false
           this.loadDiscounts()
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'success',
+            center: true
+          })
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'danger',
+            center: true
+          })
         }
       })
     },
@@ -167,9 +175,17 @@ export default {
       }).then(resp => {
         if (resp && resp.data.code === 200) {
           if (value) {
-            this.$message('用户 ' + row.timeName + ' 已启用')
+            this.$message({
+              message: '促销 ' + row.timeName + ' 已展示',
+              type: 'success',
+              center: true
+            })
           } else {
-            this.$message('用户 ' + row.timeName + ' 已禁用')
+            this.$message({
+              message: '促销 ' + row.timeName + ' 已屏蔽',
+              type: 'info',
+              center: true
+            })
           }
         }
       })

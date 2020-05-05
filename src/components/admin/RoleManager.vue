@@ -184,16 +184,23 @@ export default {
             })
             .then(resp => {
               if (resp && resp.status === 200) {
-                alert('修改成功')
+                this.$message({
+                  message: '修改成功',
+                  type: 'success',
+                  center: true
+                })
                 this.dialogFormVisible = false
                 this.loadRoles()
               } else {
-                alert('修改失败')
+                this.$message({
+                  message: '修改失败',
+                  type: 'danger',
+                  center: true
+                })
                 return false
               }
             })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -227,9 +234,17 @@ export default {
         id: row.id
       }).then(resp => {
         if (resp && resp.status === 200) {
-          alert('删除成功')
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            center: true
+          })
         } else {
-          alert('删除失败')
+          this.$message({
+            message: '删除失败',
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })
@@ -245,9 +260,17 @@ export default {
         }).then(resp => {
           if (resp && resp.data.code === 200) {
             if (value) {
-              this.$message('角色 ' + role.nameZh + ' 已启用')
+              this.$message({
+                message: '角色 ' + role.nameZh + ' 已启用',
+                type: 'success',
+                center: true
+              })
             } else {
-              this.$message('角色 ' + role.nameZh + ' 已禁用')
+              this.$message({
+                message: '角色 ' + role.nameZh + ' 已禁用',
+                type: 'info',
+                center: true
+              })
             }
           }
         })

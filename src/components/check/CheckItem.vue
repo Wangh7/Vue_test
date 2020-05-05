@@ -176,10 +176,18 @@ export default {
               price: this.form.price
             }).then(resp => {
             if (resp && resp.data.code === 200) {
-              alert(resp.data.message)
+              this.$message({
+                message: resp.data.message,
+                type: 'success',
+                center: true
+              })
               this.loadItems()
             } else {
-              alert(resp.data.message)
+              this.$message({
+                message: resp.data.message,
+                type: 'danger',
+                center: true
+              })
               return false
             }
           })
@@ -194,10 +202,18 @@ export default {
           managerId: this.$store.state.user.userId
         }).then(resp => {
         if (resp && resp.data.code === 200) {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'success',
+            center: true
+          })
           this.loadItems()
         } else {
-          alert(resp.data.message)
+          this.$message({
+            message: resp.data.message,
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })
@@ -229,7 +245,9 @@ export default {
           pass: pass
         }
       }).then(resp => {
-        alert(resp.data)
+        this.$alert(resp.data,'商品卡密',{
+          confirmButtonText: '完成'
+        })
       })
     },
     getPass () {
@@ -246,7 +264,11 @@ export default {
       aux.select()
       document.execCommand('copy')
       document.body.removeChild(aux)
-      alert('复制成功')
+      this.$message({
+        message: '复制成功',
+        type: 'info',
+        center: true
+      })
     }
   }
 }

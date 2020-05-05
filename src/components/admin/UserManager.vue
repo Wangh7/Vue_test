@@ -164,12 +164,14 @@ export default {
             if (resp && resp.status === 200) {
               this.$message({
                 type: 'success',
-                message: resp.data.message
+                message: resp.data.message,
+                center: true
               })
             } else {
               this.$message({
                 type: 'danger',
-                message: resp.data.message
+                message: resp.data.message,
+                center: true
               })
             }
           })
@@ -196,11 +198,19 @@ export default {
             })
             .then(resp => {
               if (resp && resp.status === 200) {
-                alert('修改成功')
+                this.$message({
+                  message: '修改成功',
+                  type: 'success',
+                  center: true
+                })
                 this.dialogFormVisible = false
                 this.loadUsers()
               } else {
-                alert('修改失败')
+                this.$message({
+                  message: '修改失败',
+                  type: 'danger',
+                  center: true
+                })
                 return false
               }
             })
@@ -235,9 +245,17 @@ export default {
         id: row.id
       }).then(resp => {
         if (resp && resp.status === 200) {
-          alert('删除成功')
+          this.$message({
+            message: '删除成功',
+            type: 'success',
+            center: true
+          })
         } else {
-          alert('删除失败')
+          this.$message({
+            message: '删除失败',
+            type: 'danger',
+            center: true
+          })
           return false
         }
       })
@@ -253,9 +271,17 @@ export default {
         }).then(resp => {
           if (resp && resp.data.code === 200) {
             if (value) {
-              this.$message('用户 ' + user.username + ' 已启用')
+              this.$message({
+                message: '用户 ' + user.username + ' 已启用',
+                type: 'success',
+                center: true
+              })
             } else {
-              this.$message('用户 ' + user.username + ' 已禁用')
+              this.$message({
+                message: '用户 ' + user.username + ' 已禁用',
+                type: 'info',
+                center: true
+              })
             }
           }
         })
