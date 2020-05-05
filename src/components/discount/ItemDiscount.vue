@@ -3,6 +3,7 @@
     <el-table
       :data="types.slice((currentPage-1)*pageSize,currentPage*pageSize)"
       style="width: 1000px">
+
       <el-table-column
         prop="typeId"
         label="ID"
@@ -43,6 +44,11 @@
           </el-popover>
         </template>
       </el-table-column>
+      <el-table-column align="right">
+        <template slot="header" slot-scope="scope">
+          <el-button type="success" size="mini" @click="handleNew">添加</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @current-change="handleCurrentChange"
@@ -58,11 +64,11 @@
         label-width="150px"
         class="demo-ruleForm"
         style="text-align: left">
-        <el-form-item label="名称">
-          <div>{{form.name}}</div>
+        <el-form-item label="商品名称">
+          <el-input prefix-icon="el-icon-document" v-model="form.name" placeholder="请输入商品名称"></el-input>
         </el-form-item>
-        <el-form-item label="代码">
-          <div>{{form.code}}</div>
+        <el-form-item label="商品代码">
+          <el-input prefix-icon="el-icon-document" v-model="form.code" placeholder="请输入商品代码"></el-input>
         </el-form-item>
         <el-form-item label="收购折扣">
           <el-input-number v-model="form.discountBuy" :precision="2" :step="0.01" :max="0.99" :min="0.01"></el-input-number>
@@ -74,6 +80,31 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button type="primary" @click="checkdiscount">修改</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="添加商品/折扣信息" :visible.sync="dialogItemVisible">
+      <el-form
+        :model="form"
+        ref="form2"
+        label-width="150px"
+        class="demo-ruleForm"
+        style="text-align: left">
+        <el-form-item label="商品名称">
+          <el-input prefix-icon="el-icon-document" v-model="form.name" placeholder="请输入商品名称"></el-input>
+        </el-form-item>
+        <el-form-item label="商品代码">
+          <el-input prefix-icon="el-icon-document" v-model="form.code" placeholder="请输入商品代码"></el-input>
+        </el-form-item>
+        <el-form-item label="收购折扣">
+          <el-input-number v-model="form.discountBuy" :precision="2" :step="0.01" :max="0.99" :min="0.01"></el-input-number>
+        </el-form-item>
+        <el-form-item label="售卖折扣">
+          <el-input-number v-model="form.discountSell" :precision="2" :step="0.01" :max="0.99" :min="0.01"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogItemVisible = false">取消</el-button>
+        <el-button type="success" @click="submit()">添加</el-button>
       </div>
     </el-dialog>
   </div>
@@ -89,6 +120,7 @@ export default {
       pageSize: 10,
       popVisible: false,
       dialogFormVisible: false,
+      dialogItemVisible: false,
       form: {
         id: '',
         name: '',
@@ -133,12 +165,23 @@ export default {
       }).then(resp => {
         if (resp && resp.data.code === 200) {
           this.dialogFormVisible = false
+          this.dialogItemVisible = false
           this.loadTypes()
           alert(resp.data.message)
         } else {
           alert(resp.data.message)
         }
       })
+    },
+    handleNew () {
+      this.dialogItemVisible = true
+      this.form = {
+        id: '',
+        name: '',
+        code: '',
+        discountBuy: 0.9,
+        discountSell: 0.9
+      }
     },
     handleEdit (index, row, scope) {
       this.dialogFormVisible = true
@@ -154,6 +197,20 @@ export default {
     },
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
+    },
+    handleDelete (index, row, scope) {
+      scope._self.$refs[`popover-${index}`].doClose()
+      this.$axios.post('/discount/type/delete', {
+        typeId: row.typeId
+      }).then(resp => {
+        if (resp && resp.data.code === 200) {
+          this.loadTypes()
+          alert('删除成功')
+        } else {
+          alert(resp.data.message)
+          return false
+        }
+      })
     }
   }
 }

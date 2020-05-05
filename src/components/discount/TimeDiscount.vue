@@ -133,11 +133,9 @@ export default {
     },
     submit () {
       this.$axios.post('/discount/time', {
-        typeId: this.form.id,
-        typeName: this.form.name,
-        typeCode: this.form.code,
-        typeDiscountBuy: this.form.discountBuy,
-        typeDiscountSell: this.form.discountSell
+        id: this.form.id,
+        discountBuy: this.form.discountBuy,
+        discountSell: this.form.discountSell
       }).then(resp => {
         if (resp && resp.data.code === 200) {
           this.dialogFormVisible = false

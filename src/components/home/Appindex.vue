@@ -6,7 +6,7 @@
       </el-carousel-item>
     </el-carousel>
     <br>
-    <el-col :span="4">
+    <el-col :span="4" offset="1">
       <div class="hot-list">
         <strong class="maintitle">HOT热销榜</strong>
         <p class="subtitle">由历史销量得出</p>
@@ -32,7 +32,7 @@
 
       </el-card>
     </el-col>
-    <el-col :span="18" :offset="2">
+    <el-col :span="17" :offset="1">
       <el-row>
         <div style="font-size: 38px;float: left;">最新上架</div>
       </el-row>
@@ -59,7 +59,7 @@
       <br>
       <el-row>
         <el-col>
-          <el-carousel :interval="7000" direction="vertical" height="120px" indicator-position="none">
+          <el-carousel :interval="6500" direction="vertical" height="120px" indicator-position="none">
             <el-carousel-item v-for="(dis,i) in discountList" :key="i"
                               style="background: #d3dce6;">
               <el-col :span="8">

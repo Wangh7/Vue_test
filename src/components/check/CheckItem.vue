@@ -91,7 +91,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button type="danger" @click="checkFail()">打回</el-button>
-        <el-button type="success" @click="checkSuccess('form')">通过</el-button>
+        <el-button :disabled="!form.entity && !newPass" type="success" @click="checkSuccess('form')">通过</el-button>
       </div>
     </el-dialog>
   </div>
@@ -108,6 +108,7 @@ export default {
       pageSize: 10,
       popVisible: false,
       dialogFormVisible: false,
+      newPass: false,
       form: {
         id: '',
         type: '',
@@ -205,6 +206,7 @@ export default {
       this.currentPage = currentPage
     },
     handleEdit (index, row, scope) {
+      this.newPass = false
       this.dialogFormVisible = true
       this.$nextTick(function () {
         this.form = {
@@ -234,6 +236,7 @@ export default {
       this.$axios.get('/check/newPass').then(resp => {
         this.form.newPass = resp.data
         this.copyToClip(resp.data)
+        this.newPass = true
       })
     },
     copyToClip (content) {

@@ -60,7 +60,6 @@ export default {
             let data = resp.data.result
             _this.$store.commit('login', data)
             let path = this.$route.query.redirect
-            // this.$router.replace({path: '/index'})
             this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
           } else {
             this.$alert(resp.data.message, '提示', {
