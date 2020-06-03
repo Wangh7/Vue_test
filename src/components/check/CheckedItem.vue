@@ -301,8 +301,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$confirm('您所填写的快递单号为 ' + this.form.expressNumNew + ' 一经确认不可修改！', '再次确认！', {
-            confirmButtonText: '奥利给',
-            cancelButtonText: '手残了',
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             this.dialogCheckVisible = false
@@ -338,8 +338,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$confirm('您所填写的快递单号为 ' + this.form.expressNumNew + ' 一经确认不可修改！', '再次确认！', {
-            confirmButtonText: '奥利给',
-            cancelButtonText: '手残了',
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             this.dialogCheckVisible = false

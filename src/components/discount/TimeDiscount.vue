@@ -120,9 +120,9 @@ export default {
     },
     checkdiscount () {
       if (this.form.discountSell < this.form.discountBuy) {
-        this.$confirm('售卖折扣小于收购折扣，宁认真的吗？Σ( ° △ °|||)︴', '血亏！', {
-          confirmButtonText: '奥利给',
-          cancelButtonText: '手残了',
+        this.$confirm('售卖折扣小于收购折扣，您认真的吗？Σ( ° △ °|||)︴', '血亏！', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.submit()

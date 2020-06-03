@@ -40,18 +40,18 @@
             size="mini"
             @click="handleEdit(scope.$index, scope.row, scope)">审查
           </el-button>
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="`popover-${scope.$index}`">
-            <p>确定删除吗？</p>
-            <div style="text-align: right;margin:0">
-              <el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消
-              </el-button>
-              <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>
-            </div>
-            <el-button size="mini" type="danger" slot="reference">删除</el-button>
-          </el-popover>
+          <!--<el-popover-->
+            <!--placement="top"-->
+            <!--width="160"-->
+            <!--:ref="`popover-${scope.$index}`">-->
+            <!--<p>确定删除吗？</p>-->
+            <!--<div style="text-align: right;margin:0">-->
+              <!--<el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消-->
+              <!--</el-button>-->
+              <!--<el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>-->
+            <!--</div>-->
+            <!--<el-button size="mini" type="danger" slot="reference">删除</el-button>-->
+          <!--</el-popover>-->
         </template>
       </el-table-column>
     </el-table>

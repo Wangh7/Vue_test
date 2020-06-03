@@ -78,18 +78,18 @@
             size="mini"
             @click="handleBack(scope.$index, scope.row)">收货
           </el-button>
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="`popover-${scope.$index}`">
-            <p>确定删除吗？</p>
-            <div style="text-align: right;margin:0">
-              <el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消
-              </el-button>
-              <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>
-            </div>
-            <el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>
-          </el-popover>
+          <!--<el-popover-->
+            <!--placement="top"-->
+            <!--width="160"-->
+            <!--:ref="`popover-${scope.$index}`">-->
+            <!--<p>确定删除吗？</p>-->
+            <!--<div style="text-align: right;margin:0">-->
+              <!--<el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消-->
+              <!--</el-button>-->
+              <!--<el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>-->
+            <!--</div>-->
+            <!--<el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>-->
+          <!--</el-popover>-->
         </template>
       </el-table-column>
       <el-table-column type="expand" width="1">
@@ -410,8 +410,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$confirm('您所填写的快递单号为 ' + this.form.expressNum + ' 一经确认不可修改！', '再次确认！', {
-            confirmButtonText: '奥利给',
-            cancelButtonText: '手残了',
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             this.dialogSellVisible = false
@@ -508,8 +508,8 @@ export default {
     },
     confirm () {
       this.$confirm('确认收货？', '再次确认！', {
-        confirmButtonText: '奥利给',
-        cancelButtonText: '手残了',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.dialogBackVisible = false

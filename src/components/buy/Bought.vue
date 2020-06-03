@@ -60,18 +60,18 @@
             size="mini"
             @click="handleEdit(scope.row)">详情
           </el-button>
-          <el-popover
-            placement="top"
-            width="160"
-            :ref="`popover-${scope.$index}`">
-            <p>确定删除吗？</p>
-            <div style="text-align: right;margin:0">
-              <el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消
-              </el-button>
-              <el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>
-            </div>
-            <el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>
-          </el-popover>
+          <!--<el-popover-->
+            <!--placement="top"-->
+            <!--width="160"-->
+            <!--:ref="`popover-${scope.$index}`">-->
+            <!--<p>确定删除吗？</p>-->
+            <!--<div style="text-align: right;margin:0">-->
+              <!--<el-button size="mini" type="text" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">取消-->
+              <!--</el-button>-->
+              <!--<el-button type="primary" size="mini" @click="handleDelete(scope.$index, scope.row, scope)">确定</el-button>-->
+            <!--</div>-->
+            <!--<el-button :disabled="scope.row.status !== 'N'" size="mini" type="danger" slot="reference">删除</el-button>-->
+          <!--</el-popover>-->
         </template>
       </el-table-column>
       <el-table-column type="expand" width="1">
@@ -279,8 +279,8 @@ export default {
     },
     confirm () {
       this.$confirm('确认收货？', '再次确认！', {
-        confirmButtonText: '奥利给',
-        cancelButtonText: '手残了',
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.dialogFormVisible = false

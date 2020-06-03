@@ -32,9 +32,9 @@
         <el-button :type="btStyle.type" style="width: 100%;" slot="reference">{{btStyle.name}}</el-button>
       </el-popover>
     </el-form-item>
-    <el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
-    </el-form-item>
+    <!--<el-form-item>-->
+      <!--<el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>-->
+    <!--</el-form-item>-->
     <el-form-item>
       <el-button type="primary" style="width: 30%;border: none" v-on:click="login">登录</el-button>
       <el-button type="info" style="width: 30%;border: none" @click="resetForm('loginForm')">重置</el-button>

@@ -17,7 +17,7 @@
     <div>
       <span>您发布的实体卡商品中有</span>
       <span style="font-size: 28px;color: #d00;font-weight: bold">{{index.totalSellW}}</span>
-      <span>件商品审核通过，请及时发货</span>
+      <span>件商品已被购买，请及时发货</span>
     </div>
     <div>
       <span>您发布的实体卡商品中有</span>
